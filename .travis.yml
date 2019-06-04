@@ -1,0 +1,25 @@
+language: go
+
+go:
+  - 1.10.x
+  - 1.11.x
+  - 1.12.x
+# - master
+
+os:
+  - linux
+  - osx
+  - windows
+
+addons:
+  apt:
+    packages: libudev-dev
+
+install: |
+  if [ $TRAVIS_OS_NAME = "windows" ]; then
+    choco install make -ry
+  fi
+
+script:
+  - make all
+  - make install
