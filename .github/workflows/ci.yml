@@ -1,0 +1,25 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version:
+          - 'stable'
+          - 'oldstable'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install libudev-dev
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Run tests
+        run: go test ./...
