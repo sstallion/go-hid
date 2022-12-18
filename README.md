@@ -2,7 +2,7 @@
 
 ![](.github/images/gopher.png)
 
-[![](https://travis-ci.org/sstallion/go-hid.svg?branch=master)][1]
+[![](https://github.com/sstallion/go-hid/actions/workflows/ci.yml/badge.svg?branch=master)][1]
 [![](https://godoc.org/github.com/sstallion/go-hid?status.svg)][2]
 [![](https://goreportcard.com/badge/github.com/sstallion/go-hid)][3]
 [![](https://img.shields.io/github/license/sstallion/go-hid.svg)][4]
@@ -47,7 +47,7 @@ Pull requests are welcome! See [CONTRIBUTING.md][6] for more details.
 Source code in this repository is licensed under a Simplified BSD License. See
 [LICENSE][6] for more details.
 
-[1]: https://travis-ci.org/sstallion/go-hid
+[1]: https://github.com/sstallion/go-hid/actions/workflows/ci.yml
 [2]: https://godoc.org/github.com/sstallion/go-hid
 [3]: https://goreportcard.com/report/github.com/sstallion/go-hid
 [4]: https://github.com/sstallion/go-hid/blob/master/LICENSE
