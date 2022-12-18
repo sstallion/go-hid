@@ -22,13 +22,15 @@
 // SUCH DAMAGE.
 
 // Package hid provides an idiomatic interface to HIDAPI, a simple library for
-// communicating with USB and Bluetooth HID devices on Linux, Mac, and Windows.
+// communicating with USB and Bluetooth HID devices on FreeBSD, Linux, macOS,
+// and Windows.
 //
 // See https://github.com/signal11/hidapi for details.
 package hid
 
 /*
 #cgo darwin LDFLAGS: -framework IOKit -framework CoreFoundation
+#cgo freebsd LDFLAGS: -lusb -liconv -pthread
 #cgo linux LDFLAGS: -ludev -lrt
 #cgo windows LDFLAGS: -lsetupapi
 

@@ -8,7 +8,8 @@
 [![](https://img.shields.io/github/license/sstallion/go-hid.svg)][4]
 
 Package `hid` provides an idiomatic interface to HIDAPI, a simple library for
-communicating with USB and Bluetooth HID devices on Linux, Mac, and Windows.
+communicating with USB and Bluetooth HID devices on FreeBSD, Linux, macOS, and
+Windows.
 
 See https://github.com/signal11/hidapi for details.
 
