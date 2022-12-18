@@ -25,14 +25,14 @@
 // communicating with USB and Bluetooth HID devices on FreeBSD, Linux, macOS,
 // and Windows.
 //
-// See https://github.com/signal11/hidapi for details.
+// See https://github.com/libusb/hidapi for details.
 package hid
 
 /*
-#cgo darwin LDFLAGS: -framework IOKit -framework CoreFoundation
+#cgo darwin LDFLAGS: -framework IOKit -framework CoreFoundation -framework AppKit
 #cgo freebsd LDFLAGS: -lusb -liconv -pthread
 #cgo linux LDFLAGS: -ludev -lrt
-#cgo windows LDFLAGS: -lsetupapi
+#cgo windows LDFLAGS:
 
 #include <stdint.h>
 #include <stdlib.h>
