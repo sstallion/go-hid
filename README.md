@@ -5,7 +5,7 @@
 [![](https://travis-ci.org/sstallion/go-hid.svg?branch=master)][1]
 [![](https://godoc.org/github.com/sstallion/go-hid?status.svg)][2]
 [![](https://goreportcard.com/badge/github.com/sstallion/go-hid)][3]
-[![](https://img.shields.io/github/license/sstallion/go-hid.svg)][LICENSE]
+[![](https://img.shields.io/github/license/sstallion/go-hid.svg)][4]
 
 Package `hid` provides an idiomatic interface to HIDAPI, a simple library for
 communicating with USB and Bluetooth HID devices on Linux, Mac, and Windows.
@@ -26,7 +26,7 @@ Package `hid` may be installed via the `go get` command:
     $ go get github.com/sstallion/go-hid@latest
 
 >**Note**: The prerequisites for HIDAPI must be available prior to installation.
-> See the HIDAPI [README][4] for details.
+> See the HIDAPI [README][5] for details.
 
 ### lshid
 
@@ -39,18 +39,16 @@ Once installed, issue `lshid -h` to display usage.
 
 ## Contributing
 
-Pull requests are welcome! If a problem is encountered using this package,
-please file an issue on [GitHub][5].
+Pull requests are welcome! See [CONTRIBUTING.md][6] for more details.
 
 ## License
 
 Source code in this repository is licensed under a Simplified BSD License. See
-[LICENSE] for more details.
+[LICENSE][6] for more details.
 
 [1]: https://travis-ci.org/sstallion/go-hid
 [2]: https://godoc.org/github.com/sstallion/go-hid
 [3]: https://goreportcard.com/report/github.com/sstallion/go-hid
-[4]: https://github.com/signal11/hidapi/blob/master/README.txt
-[5]: https://github.com/sstallion/go-hid/issues/new
-
-[LICENSE]: LICENSE
+[4]: https://github.com/sstallion/go-hid/blob/master/LICENSE
+[5]: https://github.com/signal11/hidapi/blob/master/README.txt
+[6]: https://github.com/sstallion/go-hid/blob/master/CONTRIBUTING.md
