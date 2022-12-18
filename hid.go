@@ -247,6 +247,19 @@ func (d *Device) GetFeatureReport(b []byte) (int, error) {
 	return int(res), nil
 }
 
+// GetInputReport receives an input report with len(b) bytes from the Device.
+// It returns the number of bytes read and an error, if any.
+func (d *Device) GetInputReport(b []byte) (int, error) {
+	data := (*C.uchar)(&b[0])
+	length := C.size_t(len(b))
+
+	res, err := C.hid_get_input_report(d.handle, data, length)
+	if res == -1 {
+		return int(res), wrapErr(err)
+	}
+	return int(res), nil
+}
+
 // Close closes the Device.
 func (d *Device) Close() error {
 	_, err := C.hid_close(d.handle)
@@ -312,6 +325,26 @@ func (d *Device) Error() error {
 		return nil // no error
 	}
 	return errors.New(wcstogo(wcs))
+}
+
+// APIVersion describes the HIDAPI version.
+type APIVersion struct {
+	Major, Minor, Patch int
+}
+
+// GetVersion returns the HIDAPI version.
+func GetVersion() APIVersion {
+	v := C.hid_version()
+	return APIVersion{
+		Major: int(v.major),
+		Minor: int(v.minor),
+		Patch: int(v.patch),
+	}
+}
+
+// GetVersion returns the HIDAPI version as a string.
+func GetVersionStr() string {
+	return C.GoString(C.hid_version_str())
 }
 
 // Open opens a HID device attached to the system with a matching vendor ID,

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Steven Stallion <sstallion@gmail.com>
+// Copyright (c) 2022 Steven Stallion <sstallion@gmail.com>
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -34,6 +34,7 @@ import (
 
 var (
 	verbose bool
+	version bool
 	vid     uint
 	pid     uint
 )
@@ -41,6 +42,8 @@ var (
 func init() {
 	flag.BoolVar(&verbose, "v", false,
 		"Increase verbosity (show device information)")
+	flag.BoolVar(&version, "version", false,
+		"Print HIDAPI version and exit")
 	flag.UintVar(&vid, "vid", hid.VendorIDAny,
 		"Show only devices with the specified `vendor` ID")
 	flag.UintVar(&pid, "pid", hid.ProductIDAny,
@@ -54,6 +57,11 @@ func main() {
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	if version {
+		fmt.Printf("HIDAPI version %s\n", hid.GetVersionStr())
+		os.Exit(0)
+	}
 
 	hid.Enumerate(uint16(vid), uint16(pid), func(info *hid.DeviceInfo) error {
 		fmt.Printf("%s: ID %04x:%04x %s %s\n",
