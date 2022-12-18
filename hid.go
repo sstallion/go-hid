@@ -32,7 +32,6 @@ package hid
 #cgo darwin LDFLAGS: -framework IOKit -framework CoreFoundation -framework AppKit
 #cgo freebsd LDFLAGS: -lusb -liconv -pthread
 #cgo linux LDFLAGS: -ludev -lrt
-#cgo windows LDFLAGS:
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -316,9 +315,6 @@ func (d *Device) GetIndexedStr(index int) (string, error) {
 
 // Error returns the last error that occurred on the Device. If no error
 // occurred, nil is returned.
-//
-// Not all OSes support this operation.
-// See https://github.com/signal11/hidapi/pull/125 for details.
 func (d *Device) Error() error {
 	wcs := C.hid_error(d.handle)
 	if wcs == nil {
@@ -327,9 +323,21 @@ func (d *Device) Error() error {
 	return errors.New(wcstogo(wcs))
 }
 
+// Error returns the last non-device-specific error that occurred. If no error
+// occurred, nil is returned.
+func Error() error {
+	wcs := C.hid_error(nil)
+	if wcs == nil {
+		return nil // no error
+	}
+	return errors.New(wcstogo(wcs))
+}
+
 // APIVersion describes the HIDAPI version.
 type APIVersion struct {
-	Major, Minor, Patch int
+	Major int // Major version number
+	Minor int // Minor version number
+	Patch int // Patch version number
 }
 
 // GetVersion returns the HIDAPI version.

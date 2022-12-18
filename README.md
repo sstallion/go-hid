@@ -27,8 +27,8 @@ Package `hid` may be installed via the `go get` command:
 
     $ go get github.com/sstallion/go-hid@latest
 
->**Note**: The prerequisites for HIDAPI must be available prior to installation.
-> See the HIDAPI [README][6] for details.
+>**Note**: Prerequisites for building HIDAPI from source must be installed prior
+> to issuing `go get`. See [Prerequisites][6] for more details.
 
 ### lshid
 
@@ -53,5 +53,5 @@ Source code in this repository is licensed under a Simplified BSD License. See
 [3]: https://goreportcard.com/report/github.com/sstallion/go-hid
 [4]: https://github.com/sstallion/go-hid/releases/latest
 [5]: https://github.com/sstallion/go-hid/blob/master/LICENSE
-[6]: https://github.com/libusb/hidapi/blob/master/README.txt
+[6]: https://github.com/libusb/hidapi/blob/master/BUILD.md#prerequisites
 [7]: https://github.com/sstallion/go-hid/blob/master/CONTRIBUTING.md

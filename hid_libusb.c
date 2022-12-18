@@ -20,6 +20,8 @@
         https://github.com/libusb/hidapi .
 ********************************************************/
 
+//go:build freebsd || (linux && libusb)
+
 #define _GNU_SOURCE /* needed for wcsdup() before glibc 2.10 */
 
 /* C */
