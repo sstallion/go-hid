@@ -1,6 +1,6 @@
 # HIDAPI Bindings for Go
 
-![](doc/gopher.png)
+![](.github/images/gopher.png)
 
 [![](https://travis-ci.org/sstallion/go-hid.svg?branch=master)][1]
 [![](https://godoc.org/github.com/sstallion/go-hid?status.svg)][2]
@@ -21,36 +21,19 @@ command after installing the package:
 
 ## Installation
 
-Package `hid` may be installed using one of two methods:
+Package `hid` may be installed via the `go get` command:
 
-1. Via the `go get` command, which dynamically links against the system HIDAPI
-   installation. This method requires HIDAPI be installed using a system package
-   (eg. `hidapi-devel`) and headers are available. In practice, this works well
-   for Linux and Mac, but can cause issues on Windows where HIDAPI is not
-   commonly packaged:
+    $ go get github.com/sstallion/go-hid@latest
 
-       $ go get github.com/sstallion/go-hid
-
-2. Use the provided Makefile to statically link against a vendored copy of
-   HIDAPI (commit [a6a622f]). This method works for all supported OSes and is
-   the suggested method if installing on Windows:
-
-       $ go get -d github.com/sstallion/go-hid
-       $ cd $GOPATH/src/github.com/sstallion/go-hid
-       $ make all
-       $ make install
-
-   [a6a622f]: https://github.com/signal11/hidapi/commit/a6a622ffb680c55da0de787ff93b80280498330f
-
-Note: The prerequisites for HIDAPI must also be installed regardless of the
-method chosen above. See the HIDAPI [README][4] for details.
+>**Note**: The prerequisites for HIDAPI must be available prior to installation.
+> See the HIDAPI [README][4] for details.
 
 ### lshid
 
 An example command named `lshid` is provided, which displays information about
 HID devices attached to the system. `lshid` may be installed by issuing:
 
-    $ go get github.com/sstallion/go-hid/cmd/lshid
+    $ go get github.com/sstallion/go-hid/cmd/lshid@latest
 
 Once installed, issue `lshid -h` to display usage.
 
