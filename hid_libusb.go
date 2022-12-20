@@ -31,9 +31,9 @@ package hid
 */
 import "C"
 
-// InterfaceAny can be passed to the OpenSysDevice function to match any USB
-// interface number.
-const InterfaceAny = -1
+// InterfaceNbrAny can be passed to the OpenSysDevice function to match any
+// USB interface number.
+const InterfaceNbrAny = -1
 
 // OpenSysDevice opens the HID device attached to the system using
 // libusb_wrap_sys_device. This function wraps a platform-specific file
