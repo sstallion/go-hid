@@ -72,19 +72,51 @@ func wrapErr(err error) error {
 // Init initializes the hid package. Calling this function is not strictly
 // necessary, however it is recommended for concurrent programs.
 func Init() error {
-	if res, err := C.hid_init(); res == -1 {
-		return wrapErr(err)
+	if res := C.hid_init(); res == -1 {
+		return wrapErr(Error())
 	}
 	return nil
 }
 
-// Exit finalizes the hid package. This function should be called after
-// all device handles have been closed to avoid memory leaks.
+// Exit finalizes the hid package. This function should be called after all
+// device handles have been closed to avoid memory leaks.
 func Exit() error {
-	if res, err := C.hid_exit(); res == -1 {
-		return wrapErr(err)
+	if res := C.hid_exit(); res == -1 {
+		return wrapErr(Error())
 	}
 	return nil
+}
+
+// Error returns the last non-device-specific error that occurred. If no error
+// occurred, nil is returned.
+func Error() error {
+	wcs := C.hid_error(nil)
+	if wcs == nil {
+		return nil // no error
+	}
+	return errors.New(wcstogo(wcs))
+}
+
+// APIVersion describes the HIDAPI version.
+type APIVersion struct {
+	Major int // Major version number
+	Minor int // Minor version number
+	Patch int // Patch version number
+}
+
+// GetVersion returns the HIDAPI version.
+func GetVersion() APIVersion {
+	v := C.hid_version()
+	return APIVersion{
+		Major: int(v.major),
+		Minor: int(v.minor),
+		Patch: int(v.patch),
+	}
+}
+
+// GetVersion returns the HIDAPI version as a string.
+func GetVersionStr() string {
+	return C.GoString(C.hid_version_str())
 }
 
 // DeviceInfo describes a HID device attached to the system.
@@ -150,9 +182,9 @@ func (d *Device) Write(b []byte) (int, error) {
 	data := (*C.uchar)(&b[0])
 	length := C.size_t(len(b))
 
-	res, err := C.hid_write(d.handle, data, length)
+	res := C.hid_write(d.handle, data, length)
 	if res == -1 {
-		return int(res), wrapErr(err)
+		return int(res), wrapErr(d.Error())
 	}
 	return int(res), nil
 }
@@ -169,10 +201,10 @@ func (d *Device) ReadWithTimeout(b []byte, timeout time.Duration) (int, error) {
 	length := C.size_t(len(b))
 	milliseconds := C.int(timeout / time.Millisecond)
 
-	res, err := C.hid_read_timeout(d.handle, data, length, milliseconds)
+	res := C.hid_read_timeout(d.handle, data, length, milliseconds)
 	switch res {
 	case -1:
-		return int(res), wrapErr(err)
+		return int(res), wrapErr(d.Error())
 	case 0:
 		return int(res), ErrTimeout
 	}
@@ -189,10 +221,10 @@ func (d *Device) Read(b []byte) (int, error) {
 	data := (*C.uchar)(&b[0])
 	length := C.size_t(len(b))
 
-	res, err := C.hid_read(d.handle, data, length)
+	res := C.hid_read(d.handle, data, length)
 	switch res {
 	case -1:
-		return int(res), wrapErr(err)
+		return int(res), wrapErr(d.Error())
 	case 0:
 		return int(res), ErrTimeout
 	}
@@ -208,9 +240,9 @@ func (d *Device) SetNonblock(nonblocking bool) error {
 		nonblock = 1
 	}
 
-	res, err := C.hid_set_nonblocking(d.handle, nonblock)
+	res := C.hid_set_nonblocking(d.handle, nonblock)
 	if res == -1 {
-		return wrapErr(err)
+		return wrapErr(d.Error())
 	}
 	return nil
 }
@@ -224,9 +256,9 @@ func (d *Device) SendFeatureReport(b []byte) (int, error) {
 	data := (*C.uchar)(&b[0])
 	length := C.size_t(len(b))
 
-	res, err := C.hid_send_feature_report(d.handle, data, length)
+	res := C.hid_send_feature_report(d.handle, data, length)
 	if res == -1 {
-		return int(res), wrapErr(err)
+		return int(res), wrapErr(d.Error())
 	}
 	return int(res), nil
 }
@@ -239,9 +271,9 @@ func (d *Device) GetFeatureReport(b []byte) (int, error) {
 	data := (*C.uchar)(&b[0])
 	length := C.size_t(len(b))
 
-	res, err := C.hid_get_feature_report(d.handle, data, length)
+	res := C.hid_get_feature_report(d.handle, data, length)
 	if res == -1 {
-		return int(res), wrapErr(err)
+		return int(res), wrapErr(d.Error())
 	}
 	return int(res), nil
 }
@@ -252,17 +284,16 @@ func (d *Device) GetInputReport(b []byte) (int, error) {
 	data := (*C.uchar)(&b[0])
 	length := C.size_t(len(b))
 
-	res, err := C.hid_get_input_report(d.handle, data, length)
+	res := C.hid_get_input_report(d.handle, data, length)
 	if res == -1 {
-		return int(res), wrapErr(err)
+		return int(res), wrapErr(d.Error())
 	}
 	return int(res), nil
 }
 
 // Close closes the Device.
-func (d *Device) Close() error {
-	_, err := C.hid_close(d.handle)
-	return err
+func (d *Device) Close() {
+	C.hid_close(d.handle)
 }
 
 // GetMfrStr returns the manufacturer string descriptor and an error, if any.
@@ -270,9 +301,9 @@ func (d *Device) GetMfrStr() (string, error) {
 	wcs := (*C.wchar_t)(calloc(maxStrLen+1, C.sizeof_wchar_t))
 	defer C.free(unsafe.Pointer(wcs))
 
-	res, err := C.hid_get_manufacturer_string(d.handle, wcs, maxStrLen)
+	res := C.hid_get_manufacturer_string(d.handle, wcs, maxStrLen)
 	if res == -1 {
-		return "", wrapErr(err)
+		return "", wrapErr(d.Error())
 	}
 	return wcstogo(wcs), nil
 }
@@ -282,9 +313,9 @@ func (d *Device) GetProductStr() (string, error) {
 	wcs := (*C.wchar_t)(calloc(maxStrLen+1, C.sizeof_wchar_t))
 	defer C.free(unsafe.Pointer(wcs))
 
-	res, err := C.hid_get_product_string(d.handle, wcs, maxStrLen)
+	res := C.hid_get_product_string(d.handle, wcs, maxStrLen)
 	if res == -1 {
-		return "", wrapErr(err)
+		return "", wrapErr(d.Error())
 	}
 	return wcstogo(wcs), nil
 }
@@ -294,9 +325,9 @@ func (d *Device) GetSerialNbr() (string, error) {
 	wcs := (*C.wchar_t)(calloc(maxStrLen+1, C.sizeof_wchar_t))
 	defer C.free(unsafe.Pointer(wcs))
 
-	res, err := C.hid_get_serial_number_string(d.handle, wcs, maxStrLen)
+	res := C.hid_get_serial_number_string(d.handle, wcs, maxStrLen)
 	if res == -1 {
-		return "", wrapErr(err)
+		return "", wrapErr(d.Error())
 	}
 	return wcstogo(wcs), nil
 }
@@ -306,9 +337,9 @@ func (d *Device) GetIndexedStr(index int) (string, error) {
 	wcs := (*C.wchar_t)(calloc(maxStrLen+1, C.sizeof_wchar_t))
 	defer C.free(unsafe.Pointer(wcs))
 
-	res, err := C.hid_get_indexed_string(d.handle, C.int(index), wcs, maxStrLen)
+	res := C.hid_get_indexed_string(d.handle, C.int(index), wcs, maxStrLen)
 	if res == -1 {
-		return "", wrapErr(err)
+		return "", wrapErr(d.Error())
 	}
 	return wcstogo(wcs), nil
 }
@@ -323,38 +354,6 @@ func (d *Device) Error() error {
 	return errors.New(wcstogo(wcs))
 }
 
-// Error returns the last non-device-specific error that occurred. If no error
-// occurred, nil is returned.
-func Error() error {
-	wcs := C.hid_error(nil)
-	if wcs == nil {
-		return nil // no error
-	}
-	return errors.New(wcstogo(wcs))
-}
-
-// APIVersion describes the HIDAPI version.
-type APIVersion struct {
-	Major int // Major version number
-	Minor int // Minor version number
-	Patch int // Patch version number
-}
-
-// GetVersion returns the HIDAPI version.
-func GetVersion() APIVersion {
-	v := C.hid_version()
-	return APIVersion{
-		Major: int(v.major),
-		Minor: int(v.minor),
-		Patch: int(v.patch),
-	}
-}
-
-// GetVersion returns the HIDAPI version as a string.
-func GetVersionStr() string {
-	return C.GoString(C.hid_version_str())
-}
-
 // Open opens a HID device attached to the system with a matching vendor ID,
 // product ID, and serial number. It returns an open device handle and an
 // error, if any.
@@ -362,9 +361,9 @@ func Open(vid, pid uint16, serial string) (*Device, error) {
 	wcs := gotowcs(serial)
 	defer C.free(unsafe.Pointer(wcs))
 
-	handle, err := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), wcs)
+	handle := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), wcs)
 	if handle == nil {
-		return nil, wrapErr(err)
+		return nil, wrapErr(Error())
 	}
 	return &Device{handle}, nil
 }
@@ -373,9 +372,9 @@ func Open(vid, pid uint16, serial string) (*Device, error) {
 // vendor ID, and product ID. It returns an open device handle and an error,
 // if any.
 func OpenFirst(vid, pid uint16) (*Device, error) {
-	handle, err := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), nil)
+	handle := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), nil)
 	if handle == nil {
-		return nil, wrapErr(err)
+		return nil, wrapErr(Error())
 	}
 	return &Device{handle}, nil
 }
@@ -386,9 +385,9 @@ func OpenPath(path string) (*Device, error) {
 	cs := C.CString(path)
 	defer C.free(unsafe.Pointer(cs))
 
-	handle, err := C.hid_open_path(cs)
+	handle := C.hid_open_path(cs)
 	if handle == nil {
-		return nil, wrapErr(err)
+		return nil, wrapErr(Error())
 	}
 	return &Device{handle}, nil
 }

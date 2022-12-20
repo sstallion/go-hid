@@ -54,7 +54,7 @@ func gotowcs(s string) *C.wchar_t {
 
 	if n, err := C.mbstowcs(wcs, cs, n); C.iswerr(n) {
 		C.free(unsafe.Pointer(wcs))
-		panic(wrapErr(err))
+		panic(err)
 	}
 	return wcs
 }
@@ -70,7 +70,7 @@ func wcstogo(wcs *C.wchar_t) string {
 	defer C.free(unsafe.Pointer(cs))
 
 	if n, err := C.wcstombs(cs, wcs, n); C.iswerr(n) {
-		panic(wrapErr(err))
+		panic(err)
 	}
 	return C.GoString(cs)
 }

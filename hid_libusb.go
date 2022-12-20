@@ -40,9 +40,9 @@ const InterfaceAny = -1
 // descriptor known to libusb and the USB interface number specified by fd and
 // ifnum, respectively.
 func OpenSysDevice(fd uintptr, ifnum int) (*Device, error) {
-	handle, err := C.hid_libusb_wrap_sys_device(C.intptr_t(fd), C.int(ifnum))
+	handle := C.hid_libusb_wrap_sys_device(C.intptr_t(fd), C.int(ifnum))
 	if handle == nil {
-		return nil, wrapErr(err)
+		return nil, wrapErr(Error())
 	}
 	return &Device{handle}, nil
 }

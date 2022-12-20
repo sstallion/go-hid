@@ -33,9 +33,9 @@ import "C"
 func (d *Device) GetLocationID() (uint32, error) {
 	var id C.uint32_t
 
-	res, err := C.hid_darwin_get_location_id(d.handle, &id)
+	res := C.hid_darwin_get_location_id(d.handle, &id)
 	if res == -1 {
-		return uint32(res), wrapErr(err)
+		return uint32(res), wrapErr(d.Error())
 	}
 	return uint32(id), nil
 }
@@ -43,10 +43,10 @@ func (d *Device) GetLocationID() (uint32, error) {
 // IsOpenExclusive returns if the device is in exclusive mode and an error, if
 // any.
 func (d *Device) IsOpenExclusive() (bool, error) {
-	res, err := C.hid_darwin_is_device_open_exclusive(d.handle)
+	res := C.hid_darwin_is_device_open_exclusive(d.handle)
 	switch res {
 	case -1:
-		return false, wrapErr(err)
+		return false, wrapErr(d.Error())
 	case 0:
 		return false, nil
 	}
@@ -69,6 +69,5 @@ func SetOpenExclusive(exclusive bool) {
 	if exclusive {
 		open_exclusive = 1
 	}
-
 	C.hid_darwin_set_open_exclusive(open_exclusive)
 }

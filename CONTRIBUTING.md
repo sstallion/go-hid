@@ -5,7 +5,7 @@ don't have time to contribute!
 
 ## Making Changes
 
-> **Note**: This guide assumes you have a working Go 1.12 or later installation.
+> **Note**: This guide assumes you have a working Go 1.17 or later installation.
 
 To get started, [fork][2] this repository on GitHub and clone a working copy for
 development:
