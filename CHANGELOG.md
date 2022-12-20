@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.12.2] - 2022-12-20
+
 ### Changed
 
 - Renamed `hid.InterfaceAny` to `hid.InterfaceNbrAny` for consistency.
@@ -29,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Historical release based on the original HIDAPI, updated to support Go Modules.
 See https://github.com/signal11/hidapi for more details.
 
-[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.12.1...HEAD
+[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.12.2...HEAD
+[v0.12.2]: https://github.com/sstallion/go-hid/releases/tag/v0.12.2
 [v0.12.1]: https://github.com/sstallion/go-hid/releases/tag/v0.12.1
 [v0.12.0]: https://github.com/sstallion/go-hid/releases/tag/v0.12.0
 [v0.8.0]: https://github.com/sstallion/go-hid/releases/tag/v0.8.0
