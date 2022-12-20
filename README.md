@@ -23,7 +23,7 @@ command after installing the package:
 
 ## Installation
 
-Package `hid` may be installed via the `go get` command:
+To add package `hid` as a dependency or upgrade to its latest version, issue:
 
     $ go get github.com/sstallion/go-hid@latest
 
@@ -35,7 +35,7 @@ Package `hid` may be installed via the `go get` command:
 An example command named `lshid` is provided, which displays information about
 HID devices attached to the system. `lshid` may be installed by issuing:
 
-    $ go get github.com/sstallion/go-hid/cmd/lshid@latest
+    $ go install github.com/sstallion/go-hid/cmd/lshid@latest
 
 Once installed, issue `lshid -h` to display usage.
 
