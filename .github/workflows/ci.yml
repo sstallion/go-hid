@@ -48,5 +48,4 @@ jobs:
           prepare: |
             pkg install -y ${{ matrix.go-pkg }} libiconv
           run: |
-            setenv CGO_LDFLAGS -L/usr/local/lib
             ${{ matrix.go-pkg }} test ./...

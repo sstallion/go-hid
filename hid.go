@@ -30,7 +30,7 @@ package hid
 
 /*
 #cgo darwin LDFLAGS: -framework IOKit -framework CoreFoundation -framework AppKit
-#cgo freebsd LDFLAGS: -lusb -liconv -pthread
+#cgo freebsd LDFLAGS: -L/usr/local/lib -lusb -liconv -pthread
 #cgo linux LDFLAGS: -ludev -lrt
 
 #include <stdint.h>
