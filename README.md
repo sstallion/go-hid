@@ -5,7 +5,7 @@
 [![](https://github.com/sstallion/go-hid/actions/workflows/ci.yml/badge.svg?branch=master)][1]
 [![](https://godoc.org/github.com/sstallion/go-hid?status.svg)][2]
 [![](https://goreportcard.com/badge/github.com/sstallion/go-hid)][3]
-[![](https://img.shields.io/github/v/release/sstallion/go-hid)][4]
+[![](https://img.shields.io/github/v/release/sstallion/go-hid?display_name=release)][4]
 [![](https://img.shields.io/github/license/sstallion/go-hid.svg)][5]
 
 Package `hid` provides an idiomatic interface to HIDAPI, a simple library for

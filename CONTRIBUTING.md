@@ -16,24 +16,35 @@ Once you are finished, be sure to test changes locally by issuing:
 
     $ go test ./...
 
-Finally, commit your changes and create a [pull request][3] against the `master`
+Finally, commit your changes and create a [pull request][3] against the default
 branch for review.
 
 ## Making New Releases
 
-Making new releases is automated by GitHub Actions. Releases should only be
-created from the `master` branch.
+Making new releases is automated by [GitHub Actions][4]. Releases should only be
+created from the default branch; therefore, tests should be passing at all times.
 
 To make a new release, follow these steps:
 
-1. Verify the latest results of the [CI][4] workflow on the `master` branch.
+1. Create a new section in [CHANGELOG.md][5] for the new version, and move items
+   from `Unreleased` to this section. Links should also be updated to point to
+   the correct tags for comparison.
 
-2. Create a release tag by issuing:
+2. Commit outstanding changes by issuing:
+
+       $ git commit -a -m 'Release v<version>'
+
+3. Push changes to the remote repository and verify the results of the [CI][6]
+   workflow:
+
+       $ git push origin <default-branch>
+
+4. Create a release tag by issuing:
 
        $ git tag -a -m 'Release v<version>' v<version>
 
-3. Push the release tag to the remote repository and verify the results of the
-   [Release][5] workflow:
+5. Push the release tag to the remote repository and verify the results of the
+   [Release][7] workflow:
 
        $ git push origin --tags
 
@@ -45,6 +56,7 @@ licensed under its Simplified BSD License.
 [1]: https://github.com/sstallion/go-hid/issues
 [2]: https://docs.github.com/en/github/getting-started-with-github/fork-a-repo
 [3]: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request
-[4]: https://github.com/sstallion/go-hid/actions/workflows/ci.yml
-[5]: https://github.com/sstallion/go-hid/actions/workflows/release.yml
-[6]: https://docs.freebsd.org/en/books/porters-handbook/upgrading/
+[4]: https://docs.github.com/en/actions
+[5]: https://github.com/sstallion/go-hid/blob/master/CHANGELOG.md
+[6]: https://github.com/sstallion/go-hid/actions/workflows/ci.yml
+[7]: https://github.com/sstallion/go-hid/actions/workflows/release.yml

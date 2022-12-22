@@ -2,10 +2,19 @@ name: Release
 on:
   push:
     tags:
-      - v*
+      - v*.*.*
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: ffurrer2/extract-release-notes@v1
+        id: extract-release-notes
+      - name: Generate release name
+        run: |
+          REF_NAME="${{ github.ref_name }}"
+          echo "RELEASE_NAME=${REF_NAME#v}" >>$GITHUB_ENV
       - uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.extract-release-notes.outputs.release_notes }}
+          name: ${{ env.RELEASE_NAME }}
