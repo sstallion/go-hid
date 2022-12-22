@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.3] - 2022-12-20
+
 ### Added
 
 - Added `/usr/local/lib` to library search path on FreeBSD.
@@ -35,7 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Historical release based on the original HIDAPI, updated to support Go Modules.
 See https://github.com/signal11/hidapi for more details.
 
-[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.12.2...HEAD
+[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.12.3...HEAD
+[0.12.3]: https://github.com/sstallion/go-hid/releases/tag/v0.12.3
 [0.12.2]: https://github.com/sstallion/go-hid/releases/tag/v0.12.2
 [0.12.1]: https://github.com/sstallion/go-hid/releases/tag/v0.12.1
 [0.12.0]: https://github.com/sstallion/go-hid/releases/tag/v0.12.0
