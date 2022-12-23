@@ -41,6 +41,7 @@ import "C"
 
 import (
 	"errors"
+	"io"
 	"math"
 	"time"
 	"unsafe"
@@ -292,8 +293,9 @@ func (d *Device) GetInputReport(b []byte) (int, error) {
 }
 
 // Close closes the Device.
-func (d *Device) Close() {
+func (d *Device) Close() error {
 	C.hid_close(d.handle)
+	return nil
 }
 
 // GetMfrStr returns the manufacturer string descriptor and an error, if any.
@@ -353,6 +355,8 @@ func (d *Device) Error() error {
 	}
 	return errors.New(wcstogo(wcs))
 }
+
+var _ io.ReadWriteCloser = (*Device)(nil)
 
 // Open opens a HID device attached to the system with a matching vendor ID,
 // product ID, and serial number. It returns an open device handle and an

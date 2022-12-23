@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Guaranteed `hid.Device` satisfies `io.ReadWriteCloser`.
+
 ## [0.12.3] - 2022-12-20
 
 ### Added
