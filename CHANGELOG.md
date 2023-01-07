@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Imported libusb/hidapi 0.13.0 sources.
+## [0.13.0] - 2023-01-06
+
+### Changed
+
+- Imported 0.13.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
 
 ## [0.12.4] - 2022-12-23
 
@@ -45,7 +49,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Historical release based on the original HIDAPI, updated to support Go Modules.
 See https://github.com/signal11/hidapi for more details.
 
-[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.12.4...HEAD
+[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/sstallion/go-hid/releases/tag/v0.13.0
 [0.12.4]: https://github.com/sstallion/go-hid/releases/tag/v0.12.4
 [0.12.3]: https://github.com/sstallion/go-hid/releases/tag/v0.12.3
 [0.12.2]: https://github.com/sstallion/go-hid/releases/tag/v0.12.2
