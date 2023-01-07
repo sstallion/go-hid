@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Imported libusb/hidapi 0.13.0 sources.
+
 ## [0.12.4] - 2022-12-23
 
 ### Fixed

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Steven Stallion <sstallion@gmail.com>
+// Copyright (c) 2023 Steven Stallion <sstallion@gmail.com>
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -41,6 +41,7 @@ import "C"
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"math"
 	"time"
@@ -88,50 +89,64 @@ func Exit() error {
 	return nil
 }
 
-// Error returns the last non-device-specific error that occurred. If no error
-// occurred, nil is returned.
-func Error() error {
-	wcs := C.hid_error(nil)
-	if wcs == nil {
-		return nil // no error
+// BusType describes the underlying bus type.
+type BusType int
+
+const (
+	BusUnknown BusType = iota
+	BusUSB
+	BusBluetooth
+	BusI2C
+	BusSPI
+)
+
+var _BusType_map = map[BusType]string{
+	BusUnknown:   "Unknown",
+	BusUSB:       "USB",
+	BusBluetooth: "Bluetooth",
+	BusI2C:       "I2C",
+	BusSPI:       "SPI",
+}
+
+// String returns a string representation of the underlying bus type.
+func (t BusType) String() string {
+	if str, ok := _BusType_map[t]; ok {
+		return str
 	}
-	return errors.New(wcstogo(wcs))
+	panic("invalid BusType")
 }
 
-// APIVersion describes the HIDAPI version.
-type APIVersion struct {
-	Major int // Major version number
-	Minor int // Minor version number
-	Patch int // Patch version number
-}
-
-// GetVersion returns the HIDAPI version.
-func GetVersion() APIVersion {
-	v := C.hid_version()
-	return APIVersion{
-		Major: int(v.major),
-		Minor: int(v.minor),
-		Patch: int(v.patch),
-	}
-}
-
-// GetVersion returns the HIDAPI version as a string.
-func GetVersionStr() string {
-	return C.GoString(C.hid_version_str())
-}
+var _ fmt.Stringer = BusType(0)
 
 // DeviceInfo describes a HID device attached to the system.
 type DeviceInfo struct {
-	Path         string // Platform-Specific Device Path
-	VendorID     uint16 // Device Vendor ID
-	ProductID    uint16 // Device Product ID
-	SerialNbr    string // Serial Number
-	ReleaseNbr   uint16 // Device Version Number
-	MfrStr       string // Manufacturer String
-	ProductStr   string // Product String
-	UsagePage    uint16 // Usage Page for Device/Interface
-	Usage        uint16 // Usage for Device/Interface
-	InterfaceNbr int    // USB Interface Number
+	Path         string  // Platform-Specific Device Path
+	VendorID     uint16  // Device Vendor ID
+	ProductID    uint16  // Device Product ID
+	SerialNbr    string  // Serial Number
+	ReleaseNbr   uint16  // Device Version Number
+	MfrStr       string  // Manufacturer String
+	ProductStr   string  // Product String
+	UsagePage    uint16  // Usage Page for Device/Interface
+	Usage        uint16  // Usage for Device/Interface
+	InterfaceNbr int     // USB Interface Number
+	BusType      BusType // Underlying Bus Type
+}
+
+func newDeviceInfo(p *C.struct_hid_device_info) *DeviceInfo {
+	return &DeviceInfo{
+		Path:         C.GoString(p.path),
+		VendorID:     uint16(p.vendor_id),
+		ProductID:    uint16(p.product_id),
+		SerialNbr:    wcstogo(p.serial_number),
+		ReleaseNbr:   uint16(p.release_number),
+		MfrStr:       wcstogo(p.manufacturer_string),
+		ProductStr:   wcstogo(p.product_string),
+		UsagePage:    uint16(p.usage_page),
+		Usage:        uint16(p.usage),
+		InterfaceNbr: int(p.interface_number),
+		BusType:      BusType(p.bus_type),
+	}
 }
 
 // EnumFunc is the type of the function called for each HID device attached to
@@ -148,19 +163,7 @@ func Enumerate(vid, pid uint16, enumFn EnumFunc) error {
 	defer C.hid_free_enumeration(p)
 
 	for p != nil {
-		info := &DeviceInfo{
-			Path:         C.GoString(p.path),
-			VendorID:     uint16(p.vendor_id),
-			ProductID:    uint16(p.product_id),
-			SerialNbr:    wcstogo(p.serial_number),
-			ReleaseNbr:   uint16(p.release_number),
-			MfrStr:       wcstogo(p.manufacturer_string),
-			ProductStr:   wcstogo(p.product_string),
-			UsagePage:    uint16(p.usage_page),
-			Usage:        uint16(p.usage),
-			InterfaceNbr: int(p.interface_number),
-		}
-		if err := enumFn(info); err != nil {
+		if err := enumFn(newDeviceInfo(p)); err != nil {
 			return err
 		}
 		p = p.next
@@ -171,6 +174,44 @@ func Enumerate(vid, pid uint16, enumFn EnumFunc) error {
 // Device is a HID device attached to the system.
 type Device struct {
 	handle *C.hid_device
+}
+
+// Open opens a HID device attached to the system with a matching vendor ID,
+// product ID, and serial number. It returns an open device handle and an
+// error, if any.
+func Open(vid, pid uint16, serial string) (*Device, error) {
+	wcs := gotowcs(serial)
+	defer C.free(unsafe.Pointer(wcs))
+
+	handle := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), wcs)
+	if handle == nil {
+		return nil, wrapErr(Error())
+	}
+	return &Device{handle}, nil
+}
+
+// OpenFirst opens the first HID device attached to the system with a matching
+// vendor ID, and product ID. It returns an open device handle and an error,
+// if any.
+func OpenFirst(vid, pid uint16) (*Device, error) {
+	handle := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), nil)
+	if handle == nil {
+		return nil, wrapErr(Error())
+	}
+	return &Device{handle}, nil
+}
+
+// OpenPath opens the HID device attached to the system with the given path.
+// It returns an open device handle and an error, if any.
+func OpenPath(path string) (*Device, error) {
+	cs := C.CString(path)
+	defer C.free(unsafe.Pointer(cs))
+
+	handle := C.hid_open_path(cs)
+	if handle == nil {
+		return nil, wrapErr(Error())
+	}
+	return &Device{handle}, nil
 }
 
 // Write sends an output report with len(b) bytes to the Device. It returns
@@ -334,6 +375,15 @@ func (d *Device) GetSerialNbr() (string, error) {
 	return wcstogo(wcs), nil
 }
 
+// GetDeviceInfo returns device information and an error, if any.
+func (d *Device) GetDeviceInfo() (*DeviceInfo, error) {
+	p := C.hid_get_device_info(d.handle)
+	if p == nil {
+		return nil, wrapErr(Error())
+	}
+	return newDeviceInfo(p), nil
+}
+
 // GetIndexedStr returns a string descriptor by index and an error, if any.
 func (d *Device) GetIndexedStr(index int) (string, error) {
 	wcs := (*C.wchar_t)(calloc(maxStrLen+1, C.sizeof_wchar_t))
@@ -358,40 +408,34 @@ func (d *Device) Error() error {
 
 var _ io.ReadWriteCloser = (*Device)(nil)
 
-// Open opens a HID device attached to the system with a matching vendor ID,
-// product ID, and serial number. It returns an open device handle and an
-// error, if any.
-func Open(vid, pid uint16, serial string) (*Device, error) {
-	wcs := gotowcs(serial)
-	defer C.free(unsafe.Pointer(wcs))
-
-	handle := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), wcs)
-	if handle == nil {
-		return nil, wrapErr(Error())
+// Error returns the last non-device-specific error that occurred. If no error
+// occurred, nil is returned.
+func Error() error {
+	wcs := C.hid_error(nil)
+	if wcs == nil {
+		return nil // no error
 	}
-	return &Device{handle}, nil
+	return errors.New(wcstogo(wcs))
 }
 
-// OpenFirst opens the first HID device attached to the system with a matching
-// vendor ID, and product ID. It returns an open device handle and an error,
-// if any.
-func OpenFirst(vid, pid uint16) (*Device, error) {
-	handle := C.hid_open(C.uint16_t(vid), C.uint16_t(pid), nil)
-	if handle == nil {
-		return nil, wrapErr(Error())
-	}
-	return &Device{handle}, nil
+// APIVersion describes the HIDAPI version.
+type APIVersion struct {
+	Major int // Major version number
+	Minor int // Minor version number
+	Patch int // Patch version number
 }
 
-// OpenPath opens the HID device attached to the system with the given path.
-// It returns an open device handle and an error, if any.
-func OpenPath(path string) (*Device, error) {
-	cs := C.CString(path)
-	defer C.free(unsafe.Pointer(cs))
-
-	handle := C.hid_open_path(cs)
-	if handle == nil {
-		return nil, wrapErr(Error())
+// GetVersion returns the HIDAPI version.
+func GetVersion() APIVersion {
+	v := C.hid_version()
+	return APIVersion{
+		Major: int(v.major),
+		Minor: int(v.minor),
+		Patch: int(v.patch),
 	}
-	return &Device{handle}, nil
+}
+
+// GetVersion returns the HIDAPI version as a string.
+func GetVersionStr() string {
+	return C.GoString(C.hid_version_str())
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Steven Stallion <sstallion@gmail.com>
+// Copyright (c) 2023 Steven Stallion <sstallion@gmail.com>
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -40,17 +40,14 @@ func (d *Device) GetLocationID() (uint32, error) {
 	return uint32(id), nil
 }
 
-// IsOpenExclusive returns if the device is in exclusive mode and an error, if
-// any.
-func (d *Device) IsOpenExclusive() (bool, error) {
-	res := C.hid_darwin_is_device_open_exclusive(d.handle)
-	switch res {
-	case -1:
-		return false, wrapErr(d.Error())
-	case 0:
-		return false, nil
+// SetOpenExclusive changes the default behavior for Open. If exclusive is
+// false, devices will be opened in non-exclusive mode.
+func SetOpenExclusive(exclusive bool) {
+	var open_exclusive C.int
+	if exclusive {
+		open_exclusive = 1
 	}
-	return true, nil
+	C.hid_darwin_set_open_exclusive(open_exclusive)
 }
 
 // GetOpenExclusive returns if exclusive mode is enabled.
@@ -62,12 +59,15 @@ func GetOpenExclusive() bool {
 	return true
 }
 
-// SetOpenExclusive changes the default behavior for Open. If exclusive is
-// false, devices will be opened in non-exclusive mode.
-func SetOpenExclusive(exclusive bool) {
-	var open_exclusive C.int
-	if exclusive {
-		open_exclusive = 1
+// IsOpenExclusive returns if the device is in exclusive mode and an error, if
+// any.
+func (d *Device) IsOpenExclusive() (bool, error) {
+	res := C.hid_darwin_is_device_open_exclusive(d.handle)
+	switch res {
+	case -1:
+		return false, wrapErr(d.Error())
+	case 0:
+		return false, nil
 	}
-	C.hid_darwin_set_open_exclusive(open_exclusive)
+	return true, nil
 }
