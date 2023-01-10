@@ -21,7 +21,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
-// lshid lists HID devices
+// Lshid lists HID devices
 package main
 
 import (

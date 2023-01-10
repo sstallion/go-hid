@@ -41,7 +41,6 @@ import "C"
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"math"
 	"time"
@@ -92,6 +91,7 @@ func Exit() error {
 // BusType describes the underlying bus type.
 type BusType int
 
+//go:generate stringer -type BusType -trimprefix=Bus
 const (
 	BusUnknown BusType = iota
 	BusUSB
@@ -99,24 +99,6 @@ const (
 	BusI2C
 	BusSPI
 )
-
-var _BusType_map = map[BusType]string{
-	BusUnknown:   "Unknown",
-	BusUSB:       "USB",
-	BusBluetooth: "Bluetooth",
-	BusI2C:       "I2C",
-	BusSPI:       "SPI",
-}
-
-// String returns a string representation of the underlying bus type.
-func (t BusType) String() string {
-	if str, ok := _BusType_map[t]; ok {
-		return str
-	}
-	panic("invalid BusType")
-}
-
-var _ fmt.Stringer = BusType(0)
 
 // DeviceInfo describes a HID device attached to the system.
 type DeviceInfo struct {
