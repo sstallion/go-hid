@@ -32,41 +32,45 @@ import (
 	"github.com/sstallion/go-hid"
 )
 
+type versionFlag struct{}
+
+func (versionFlag) IsBoolFlag() bool { return true }
+func (versionFlag) String() string   { return "" }
+func (versionFlag) Set(s string) error {
+	fmt.Printf("HIDAPI version %s\n", hid.GetVersionStr())
+	os.Exit(0)
+	return nil
+}
+
 var (
-	verbose bool
-	version bool
-	vid     uint
-	pid     uint
+	verboseFlag bool
+	vidFlag     uint
+	pidFlag     uint
 )
 
-func init() {
-	flag.BoolVar(&verbose, "v", false,
-		"Increase verbosity (show device information)")
-	flag.BoolVar(&version, "version", false,
-		"Print HIDAPI version and exit")
-	flag.UintVar(&vid, "vid", hid.VendorIDAny,
-		"Show only devices with the specified `vendor` ID")
-	flag.UintVar(&pid, "pid", hid.ProductIDAny,
-		"Show only devices with the specified `product` ID")
+func usage() {
+	fmt.Fprintln(os.Stderr, "Usage: lshid [options]...")
+	fmt.Fprintln(os.Stderr, "List HID devices")
+	flag.PrintDefaults()
 }
 
 func main() {
-	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "Usage: lshid [options]...")
-		fmt.Fprintln(os.Stderr, "List HID devices")
-		flag.PrintDefaults()
-	}
+	flag.Usage = usage
+	flag.Var(versionFlag{}, "V",
+		"Print HIDAPI version and exit")
+	flag.BoolVar(&verboseFlag, "v", false,
+		"Increase verbosity (show device information)")
+	flag.UintVar(&vidFlag, "vid", hid.VendorIDAny,
+		"Show only devices with the specified `vendor` ID")
+	flag.UintVar(&pidFlag, "pid", hid.ProductIDAny,
+		"Show only devices with the specified `product` ID")
 	flag.Parse()
 
-	if version {
-		fmt.Printf("HIDAPI version %s\n", hid.GetVersionStr())
-		os.Exit(0)
-	}
-
-	hid.Enumerate(uint16(vid), uint16(pid), func(info *hid.DeviceInfo) error {
+	vid, pid := uint16(vidFlag), uint16(pidFlag)
+	hid.Enumerate(vid, pid, func(info *hid.DeviceInfo) error {
 		fmt.Printf("%s: ID %04x:%04x %s %s\n",
 			info.Path, info.VendorID, info.ProductID, info.MfrStr, info.ProductStr)
-		if verbose {
+		if verboseFlag {
 			fmt.Println("Device Information:")
 			fmt.Printf("\tPath         %s\n", info.Path)
 			fmt.Printf("\tVendorID     %#04x\n", info.VendorID)

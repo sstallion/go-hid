@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated `lshid` flags: `-verbose` has been renamed to `-V`.
 - Imported 0.13.1 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
 
 ## [0.13.0] - 2023-01-06
