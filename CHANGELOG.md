@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.1] - 2023-01-09
+
 ### Changed
 
-- Updated `lshid` flags: `-verbose` has been renamed to `-V`.
+- Updated `lshid` flags; `-verbose` has been renamed to `-V`.
 - Imported 0.13.1 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
 
 ## [0.13.0] - 2023-01-06
@@ -54,7 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Historical release based on the original HIDAPI, updated to support Go Modules.
 See https://github.com/signal11/hidapi for more details.
 
-[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.13.1...HEAD
+[0.13.1]: https://github.com/sstallion/go-hid/releases/tag/v0.13.1
 [0.13.0]: https://github.com/sstallion/go-hid/releases/tag/v0.13.0
 [0.12.4]: https://github.com/sstallion/go-hid/releases/tag/v0.12.4
 [0.12.3]: https://github.com/sstallion/go-hid/releases/tag/v0.12.3
