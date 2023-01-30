@@ -60,12 +60,9 @@ const maxStrLen = math.MaxUint8
 // ErrTimeout is returned if a blocking operation times out before completing.
 var ErrTimeout = errors.New("timeout")
 
-// errUnspecified is returned if a C function fails with an unknown errno.
-var errUnspecified = errors.New("unspecified error")
-
 func wrapErr(err error) error {
 	if err == nil {
-		return errUnspecified
+		return errors.New("unspecified error")
 	}
 	return err
 }
