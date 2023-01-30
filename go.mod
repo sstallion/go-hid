@@ -1,3 +1,3 @@
 module github.com/sstallion/go-hid
 
-go 1.19
+go 1.17
