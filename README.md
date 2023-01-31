@@ -3,7 +3,7 @@
 ![](.github/images/gopher.png)
 
 [![](https://github.com/sstallion/go-hid/actions/workflows/ci.yml/badge.svg?branch=master)][1]
-[![](https://godoc.org/github.com/sstallion/go-hid?status.svg)][2]
+[![](https://pkg.go.dev/badge/github.com/sstallion/go-hid)][2]
 [![](https://goreportcard.com/badge/github.com/sstallion/go-hid)][3]
 [![](https://img.shields.io/github/v/release/sstallion/go-hid)][4]
 [![](https://img.shields.io/github/license/sstallion/go-hid.svg)][5]
@@ -16,8 +16,8 @@ See https://github.com/libusb/hidapi for details.
 
 ## Documentation
 
-Up-to-date documentation can be found on [GoDoc][2], or by issuing the `go doc`
-command after installing the package:
+Up-to-date documentation can be found on [pkg.go.dev][2], or by issuing the `go
+doc` command after installing the package:
 
     $ go doc -all github.com/sstallion/go-hid
 
@@ -49,7 +49,7 @@ Source code in this repository is licensed under a Simplified BSD License. See
 [LICENSE][5] for more details.
 
 [1]: https://github.com/sstallion/go-hid/actions/workflows/ci.yml
-[2]: https://godoc.org/github.com/sstallion/go-hid
+[2]: https://pkg.go.dev/github.com/sstallion/go-hid
 [3]: https://goreportcard.com/report/github.com/sstallion/go-hid
 [4]: https://github.com/sstallion/go-hid/releases/latest
 [5]: https://github.com/sstallion/go-hid/blob/master/LICENSE
