@@ -193,15 +193,15 @@ func OpenPath(path string) (*Device, error) {
 	return &Device{handle}, nil
 }
 
-// Write sends an output report with len(b) bytes to the Device. It returns
+// Write sends an output report with len(p) bytes to the Device. It returns
 // the number of bytes written and an error, if any.
 //
 // The first byte must contain the report ID; 0 should be used for devices
 // which only support a single report. Data will be sent over the first OUT
 // endpoint if it exists, otherwise the control endpoint will be used.
-func (d *Device) Write(b []byte) (int, error) {
-	data := (*C.uchar)(&b[0])
-	length := C.size_t(len(b))
+func (d *Device) Write(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
 
 	res := C.hid_write(d.handle, data, length)
 	if res == -1 {
@@ -210,16 +210,16 @@ func (d *Device) Write(b []byte) (int, error) {
 	return int(res), nil
 }
 
-// ReadWithTimeout receives an input report with len(b) bytes from the Device
+// ReadWithTimeout receives an input report with len(p) bytes from the Device
 // with the specified timeout. It returns the number of bytes read and an
 // error, if any. ReadWithTimeout returns ErrTimeout if the operation timed
 // out before completing.
 //
 // If the device supports multiple reports, the first byte will contain the
 // report ID.
-func (d *Device) ReadWithTimeout(b []byte, timeout time.Duration) (int, error) {
-	data := (*C.uchar)(&b[0])
-	length := C.size_t(len(b))
+func (d *Device) ReadWithTimeout(p []byte, timeout time.Duration) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
 	milliseconds := C.int(timeout / time.Millisecond)
 
 	res := C.hid_read_timeout(d.handle, data, length, milliseconds)
@@ -232,15 +232,15 @@ func (d *Device) ReadWithTimeout(b []byte, timeout time.Duration) (int, error) {
 	return int(res), nil
 }
 
-// Read receives an input report with len(b) bytes from the Device. It returns
+// Read receives an input report with len(p) bytes from the Device. It returns
 // the number of bytes read and an error, if any. Read returns ErrTimeout if
 // the operation timed out before completing.
 //
 // If the device supports multiple reports, the first byte will contain the
 // report ID.
-func (d *Device) Read(b []byte) (int, error) {
-	data := (*C.uchar)(&b[0])
-	length := C.size_t(len(b))
+func (d *Device) Read(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
 
 	res := C.hid_read(d.handle, data, length)
 	switch res {
@@ -268,14 +268,14 @@ func (d *Device) SetNonblock(nonblocking bool) error {
 	return nil
 }
 
-// SendFeatureReport sends a feature report with len(b) bytes to the Device.
+// SendFeatureReport sends a feature report with len(p) bytes to the Device.
 // It returns the number of bytes written and an error, if any.
 //
 // The first byte must contain the report ID to send. Data will be sent over
 // the control endpoint as a Set_Report transfer.
-func (d *Device) SendFeatureReport(b []byte) (int, error) {
-	data := (*C.uchar)(&b[0])
-	length := C.size_t(len(b))
+func (d *Device) SendFeatureReport(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
 
 	res := C.hid_send_feature_report(d.handle, data, length)
 	if res == -1 {
@@ -284,13 +284,13 @@ func (d *Device) SendFeatureReport(b []byte) (int, error) {
 	return int(res), nil
 }
 
-// GetFeatureReport receives a feature report with len(b) bytes from the
+// GetFeatureReport receives a feature report with len(p) bytes from the
 // Device. It returns the number of bytes read and an error, if any.
 //
 // The first byte must contain the report ID to receive.
-func (d *Device) GetFeatureReport(b []byte) (int, error) {
-	data := (*C.uchar)(&b[0])
-	length := C.size_t(len(b))
+func (d *Device) GetFeatureReport(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
 
 	res := C.hid_get_feature_report(d.handle, data, length)
 	if res == -1 {
@@ -299,11 +299,11 @@ func (d *Device) GetFeatureReport(b []byte) (int, error) {
 	return int(res), nil
 }
 
-// GetInputReport receives an input report with len(b) bytes from the Device.
+// GetInputReport receives an input report with len(p) bytes from the Device.
 // It returns the number of bytes read and an error, if any.
-func (d *Device) GetInputReport(b []byte) (int, error) {
-	data := (*C.uchar)(&b[0])
-	length := C.size_t(len(b))
+func (d *Device) GetInputReport(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
 
 	res := C.hid_get_input_report(d.handle, data, length)
 	if res == -1 {
