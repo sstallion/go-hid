@@ -107,14 +107,13 @@ func Example() {
 // The following example demonstrates use of the Enumerate function to display
 // device information for all HID devices attached to the system.
 func ExampleEnumerate() {
-	hid.Enumerate(hid.VendorIDAny, hid.ProductIDAny,
-		func(info *hid.DeviceInfo) error {
-			fmt.Printf("%s: ID %04x:%04x %s %s\n",
-				info.Path,
-				info.VendorID,
-				info.ProductID,
-				info.MfrStr,
-				info.ProductStr)
-			return nil
-		})
+	hid.Enumerate(hid.VendorIDAny, hid.ProductIDAny, func(info *hid.DeviceInfo) error {
+		fmt.Printf("%s: ID %04x:%04x %s %s\n",
+			info.Path,
+			info.VendorID,
+			info.ProductID,
+			info.MfrStr,
+			info.ProductStr)
+		return nil
+	})
 }
