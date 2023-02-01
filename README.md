@@ -14,13 +14,6 @@ Windows.
 
 See https://github.com/libusb/hidapi for details.
 
-## Documentation
-
-Up-to-date documentation can be found on [pkg.go.dev][2], or by issuing the `go
-doc` command after installing the package:
-
-    $ go doc -all github.com/sstallion/go-hid
-
 ## Installation
 
 To add package `hid` as a dependency or upgrade to its latest version, issue:
@@ -32,12 +25,19 @@ To add package `hid` as a dependency or upgrade to its latest version, issue:
 
 ### lshid
 
-An example command named `lshid` is provided, which displays information about
-HID devices attached to the system. `lshid` may be installed by issuing:
+A command named `lshid` is provided, which lists HID devices attached to the
+system. `lshid` may be installed by issuing:
 
     $ go install github.com/sstallion/go-hid/cmd/lshid@latest
 
 Once installed, issue `lshid -h` to display usage.
+
+## Documentation
+
+Up-to-date documentation can be found on [pkg.go.dev][2], or by issuing the `go
+doc` command after installation:
+
+    $ go doc -all github.com/sstallion/go-hid
 
 ## Contributing
 

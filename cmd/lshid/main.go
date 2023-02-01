@@ -21,7 +21,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
-// Lshid lists HID devices
+//go:generate doxxer . -h
 package main
 
 import (
@@ -30,6 +30,7 @@ import (
 	"os"
 
 	"github.com/sstallion/go-hid"
+	"github.com/sstallion/go-tools/util"
 )
 
 type versionFlag struct{}
@@ -37,7 +38,7 @@ type versionFlag struct{}
 func (versionFlag) IsBoolFlag() bool { return true }
 func (versionFlag) String() string   { return "" }
 func (versionFlag) Set(s string) error {
-	fmt.Printf("HIDAPI version %s\n", hid.GetVersionStr())
+	fmt.Println("HIDAPI version", hid.GetVersionStr())
 	os.Exit(0)
 	return nil
 }
@@ -49,21 +50,27 @@ var (
 )
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "Usage: lshid [options]...")
-	fmt.Fprintln(os.Stderr, "List HID devices")
-	flag.PrintDefaults()
+	util.PrintGlobalUsage(`
+Lshid lists HID devices attached to the system.
+
+Usage:
+
+  {{ .Program }} [-V] [-v] [-vid vendor] [-pid product]
+
+Flags:
+
+  {{ call .PrintDefaults }}
+
+Report issues to https://github.com/sstallion/go-hid/issues.
+`)
 }
 
 func main() {
 	flag.Usage = usage
-	flag.Var(versionFlag{}, "V",
-		"Print HIDAPI version and exit")
-	flag.BoolVar(&verboseFlag, "v", false,
-		"Increase verbosity (show device information)")
-	flag.UintVar(&vidFlag, "vid", hid.VendorIDAny,
-		"Show only devices with the specified `vendor` ID")
-	flag.UintVar(&pidFlag, "pid", hid.ProductIDAny,
-		"Show only devices with the specified `product` ID")
+	flag.Var(versionFlag{}, "V", "Print HIDAPI version and exit")
+	flag.BoolVar(&verboseFlag, "v", false, "Increase verbosity (show device information)")
+	flag.UintVar(&vidFlag, "vid", hid.VendorIDAny, "Show devices with matching `vendor` ID")
+	flag.UintVar(&pidFlag, "pid", hid.ProductIDAny, "Show devices with matching `product` ID")
 	flag.Parse()
 
 	vid, pid := uint16(vidFlag), uint16(pidFlag)
@@ -75,12 +82,12 @@ func main() {
 			fmt.Printf("\tPath         %s\n", info.Path)
 			fmt.Printf("\tVendorID     %#04x\n", info.VendorID)
 			fmt.Printf("\tProductID    %#04x\n", info.ProductID)
-			fmt.Printf("\tSerialNbr    %s\n", info.SerialNbr)
-			fmt.Printf("\tReleaseNbr   %x.%x\n", info.ReleaseNbr>>8, info.ReleaseNbr&0xff)
-			fmt.Printf("\tMfrStr       %s\n", info.MfrStr)
-			fmt.Printf("\tProductStr   %s\n", info.ProductStr)
-			fmt.Printf("\tUsagePage    %#x\n", info.UsagePage)
-			fmt.Printf("\tUsage        %#x\n", info.Usage)
+			fmt.Printf("\tSerialNbr    %s\n", fmtString(info.SerialNbr))
+			fmt.Printf("\tReleaseNbr   %s\n", fmtRelease(info.ReleaseNbr))
+			fmt.Printf("\tMfrStr       %s\n", fmtString(info.MfrStr))
+			fmt.Printf("\tProductStr   %s\n", fmtString(info.ProductStr))
+			fmt.Printf("\tUsagePage    %#04x\n", info.UsagePage)
+			fmt.Printf("\tUsage        %#04x\n", info.Usage)
 			fmt.Printf("\tInterfaceNbr %d\n", info.InterfaceNbr)
 			fmt.Printf("\tBusType      %s\n", info.BusType)
 			fmt.Println()
