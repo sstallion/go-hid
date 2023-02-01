@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.2] - 2023-01-31
+
 ### Changed
 
 - Improved `lshid` device information formatting.
@@ -64,7 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Historical release based on the original HIDAPI, updated to support Go Modules.
 See https://github.com/signal11/hidapi for more details.
 
-[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.13.1...HEAD
+[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.13.2...HEAD
+[0.13.2]: https://github.com/sstallion/go-hid/releases/tag/v0.13.2
 [0.13.1]: https://github.com/sstallion/go-hid/releases/tag/v0.13.1
 [0.13.0]: https://github.com/sstallion/go-hid/releases/tag/v0.13.0
 [0.12.4]: https://github.com/sstallion/go-hid/releases/tag/v0.12.4
