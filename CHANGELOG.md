@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added libusb backend support for Linux.
+
 ## [0.13.2] - 2023-01-31
 
 ### Changed

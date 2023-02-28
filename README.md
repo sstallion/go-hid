@@ -32,6 +32,13 @@ system. `lshid` may be installed by issuing:
 
 Once installed, issue `lshid -h` to display usage.
 
+### libusb Backend Support
+
+On Linux, the hidraw backend is enabled by default. If the libusb backend is
+desired the `libusb` build constraint must be specified:
+
+    $ go build -tags libusb ./...
+
 ## Documentation
 
 Up-to-date documentation can be found on [pkg.go.dev][2], or by issuing the `go
