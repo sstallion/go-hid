@@ -23,6 +23,13 @@ To add package `hid` as a dependency or upgrade to its latest version, issue:
 >**Note**: Prerequisites for building HIDAPI from source must be installed prior
 > to issuing `go get`. See [Prerequisites][6] for more details.
 
+### libusb Backend Support
+
+On Linux, the hidraw backend is enabled by default. If the libusb backend is
+desired the `libusb` build constraint must be specified:
+
+    $ go build -tags libusb ./...
+
 ### lshid
 
 A command named `lshid` is provided, which lists HID devices attached to the
@@ -31,13 +38,6 @@ system. `lshid` may be installed by issuing:
     $ go install github.com/sstallion/go-hid/cmd/lshid@latest
 
 Once installed, issue `lshid -h` to display usage.
-
-### libusb Backend Support
-
-On Linux, the hidraw backend is enabled by default. If the libusb backend is
-desired the `libusb` build constraint must be specified:
-
-    $ go build -tags libusb ./...
 
 ## Documentation
 
