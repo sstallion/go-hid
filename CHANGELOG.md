@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added missing WinAPI bindings (see `hid_windows.go` for details)
+
+### Changed
+
+- Imported 0.14.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
+
 ## [0.13.3] - 2023-02-27
 
 ### Added

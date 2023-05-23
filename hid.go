@@ -378,6 +378,19 @@ func (d *Device) GetIndexedStr(index int) (string, error) {
 	return wcstogo(wcs), nil
 }
 
+// GetReportDescriptor receives a report descriptor with len(p) bytes from the
+// Device. It returns the number of bytes read and an error, if any.
+func (d *Device) GetReportDescriptor(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
+
+	res := C.hid_get_report_descriptor(d.handle, data, length)
+	if res == -1 {
+		return int(res), wrapErr(d.Error())
+	}
+	return int(res), nil
+}
+
 // Error returns the last error that occurred on the Device. If no error
 // occurred, nil is returned.
 func (d *Device) Error() error {
