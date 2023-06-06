@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2023-06-05
+
 ### Added
 
-- Added missing WinAPI bindings (see `hid_windows.go` for details)
+- Added missing optional APIs for `windows`.
 
 ### Changed
 
@@ -80,7 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Historical release based on the original HIDAPI, updated to support Go Modules.
 See https://github.com/signal11/hidapi for more details.
 
-[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.13.3...HEAD
+[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/sstallion/go-hid/releases/tag/v0.14.0
 [0.13.3]: https://github.com/sstallion/go-hid/releases/tag/v0.13.3
 [0.13.2]: https://github.com/sstallion/go-hid/releases/tag/v0.13.2
 [0.13.1]: https://github.com/sstallion/go-hid/releases/tag/v0.13.1
