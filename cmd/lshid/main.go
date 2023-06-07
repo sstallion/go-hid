@@ -28,6 +28,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/sstallion/go-hid"
 	"github.com/sstallion/go-tools/util"
@@ -48,6 +49,21 @@ var (
 	vidFlag     uint
 	pidFlag     uint
 )
+
+func fmtRelease(n uint16) string {
+	if n == 0 {
+		return "(empty)"
+	}
+	return fmt.Sprintf("%#04x (%x.%x)", n, n>>8, n&0xff)
+}
+
+func fmtString(s string) string {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return "(empty)"
+	}
+	return s
+}
 
 func usage() {
 	util.PrintGlobalUsage(`
