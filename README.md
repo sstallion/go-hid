@@ -26,7 +26,7 @@ To add package `hid` as a dependency or upgrade to its latest version, issue:
 ### libusb Backend Support
 
 On Linux, the hidraw backend is enabled by default. If the libusb backend is
-desired the `libusb` build constraint must be specified:
+desired, the `libusb` build constraint must be specified:
 
     $ go build -tags libusb ./...
 
