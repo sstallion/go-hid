@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Steven Stallion <sstallion@gmail.com>
+// Copyright (c) 2023 Steven Stallion <sstallion@gmail.com>
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -21,59 +21,39 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
-// Except for Windows. See wchar_windows.go for detail.
-//go:build !windows
-
 package hid
 
-/*
-#include <stdbool.h>
-#include <stdlib.h>
-#include <wchar.h>
+// Replace C.mbstowcs() and C.wcstombs() for Windows only.  Those functions
+// don't work on some characters of MBCS (Chinese, Japanese, Korean, or so)
+// because of code pages, encoding, C runtime, and the compiler used by CGO.
+//
+// See the following links for background:
+//
+//   - https://github.com/sstallion/go-hid/pull/7
+//   - https://github.com/sstallion/go-hid/issues/6
 
-// Several functions declared in wchar.h return errors that are fundamentally
-// incompatible with cgo's type system. The following function may be used to
-// determine if an error occurred.
-static bool
-iswerr(size_t n)
-{
-	return n == (size_t)-1;
-}
+/*
+#include <wchar.h>
 */
 import "C"
 
 import (
-	"unsafe"
+	"golang.org/x/sys/windows"
 )
 
 // gotowcs converts a Go string to a C wide string. The returned string must
 // be freed by the caller by calling C.free.
 func gotowcs(s string) *C.wchar_t {
-	cs := C.CString(s)
-	defer C.free(unsafe.Pointer(cs))
-
-	n := C.size_t(len(s)) + 1
-	wcs := (*C.wchar_t)(calloc(n, C.sizeof_wchar_t))
-
-	if n, err := C.mbstowcs(wcs, cs, n); C.iswerr(n) {
-		C.free(unsafe.Pointer(wcs))
+	u16s, err := windows.UTF16FromString(s)
+	if err != nil {
 		panic(err)
 	}
-	return wcs
+	n := C.size_t(len(u16s))
+	wcs := (*C.wchar_t)(calloc(n+1, C.sizeof_wchar_t))
+	return C.wmemcpy(wcs, (*C.wchar_t)(&u16s[0]), n)
 }
 
 // wcstogo converts a C wide string to a Go string.
 func wcstogo(wcs *C.wchar_t) string {
-	if wcs == nil {
-		return ""
-	}
-
-	n := C.wcslen(wcs) + 1
-	cs := (*C.char)(calloc(n, C.size_t(C.MB_CUR_MAX)))
-	defer C.free(unsafe.Pointer(cs))
-
-	if n, err := C.wcstombs(cs, wcs, n); C.iswerr(n) {
-		panic(err)
-	}
-	return C.GoString(cs)
+	return windows.UTF16PtrToString((*uint16)(wcs))
 }
