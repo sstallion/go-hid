@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.1] - 2023-07-15
+
 ### Fixed
 
-- Fixed MBCS string support for Windows ([MURAOKA Taro](https://github.com/koron)).
+- Fixed MBCS string support for `windows` ([MURAOKA Taro](https://github.com/koron)).
 
 ## [0.14.0] - 2023-06-05
 
@@ -25,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added libusb backend support for Linux.
+- Added libusb backend support for `linux`.
 
 ## [0.13.2] - 2023-01-31
 
@@ -86,7 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Historical release based on the original HIDAPI, updated to support Go Modules.
 See https://github.com/signal11/hidapi for more details.
 
-[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/sstallion/go-hid/compare/v0.14.1...HEAD
+[0.14.1]: https://github.com/sstallion/go-hid/releases/tag/v0.14.1
 [0.14.0]: https://github.com/sstallion/go-hid/releases/tag/v0.14.0
 [0.13.3]: https://github.com/sstallion/go-hid/releases/tag/v0.13.3
 [0.13.2]: https://github.com/sstallion/go-hid/releases/tag/v0.13.2
