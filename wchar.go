@@ -21,7 +21,6 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
-// Except for Windows. See wchar_windows.go for detail.
 //go:build !windows
 
 package hid

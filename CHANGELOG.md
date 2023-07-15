@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed MBCS string support for Windows ([MURAOKA Taro](https://github.com/koron)).
+
 ## [0.14.0] - 2023-06-05
 
 ### Added

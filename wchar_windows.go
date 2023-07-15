@@ -23,14 +23,10 @@
 
 package hid
 
-// Replace C.mbstowcs() and C.wcstombs() for Windows only.  Those functions
-// don't work on some characters of MBCS (Chinese, Japanese, Korean, or so)
-// because of code pages, encoding, C runtime, and the compiler used by CGO.
-//
-// See the following links for background:
-//
-//   - https://github.com/sstallion/go-hid/pull/7
-//   - https://github.com/sstallion/go-hid/issues/6
+// C.mbstowcs() and C.wcstombs() behave poorly on Windows when used with MBCS
+// strings (eg. Chinese, Korean, and Japanese). This is due to several related
+// issues working with code pages, encoding, the C runtime, and the compiler.
+// See #6 and #7 for details.
 
 /*
 #include <wchar.h>
