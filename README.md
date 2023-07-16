@@ -21,7 +21,7 @@ To add package `hid` as a dependency or upgrade to its latest version, issue:
     $ go get github.com/sstallion/go-hid@latest
 
 >**Note**: Prerequisites for building HIDAPI from source must be installed prior
-> to issuing `go get`. See [Prerequisites][6] for more details.
+> to issuing `go get`. See [Prerequisites][6] for details.
 
 ### libusb Backend Support
 
@@ -37,23 +37,23 @@ system. `lshid` may be installed by issuing:
 
     $ go install github.com/sstallion/go-hid/cmd/lshid@latest
 
-Once installed, issue `lshid -h` to display usage.
+Once installed, issue `lshid -h` to show usage.
 
 ## Documentation
 
-Up-to-date documentation can be found on [pkg.go.dev][2], or by issuing the `go
+Up-to-date documentation can be found on [pkg.go.dev][2] or by issuing the `go
 doc` command after installation:
 
     $ go doc -all github.com/sstallion/go-hid
 
 ## Contributing
 
-Pull requests are welcome! See [CONTRIBUTING.md][7] for more details.
+Pull requests are welcome! See [CONTRIBUTING.md][7] for details.
 
 ## License
 
 Source code in this repository is licensed under a Simplified BSD License. See
-[LICENSE][5] for more details.
+[LICENSE][5] for details.
 
 [1]: https://github.com/sstallion/go-hid/actions/workflows/ci.yml
 [2]: https://pkg.go.dev/github.com/sstallion/go-hid

@@ -86,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.8.0] - 2022-12-18
 
 Historical release based on the original HIDAPI, updated to support Go Modules.
-See https://github.com/signal11/hidapi for more details.
+See https://github.com/signal11/hidapi for details.
 
 [Unreleased]: https://github.com/sstallion/go-hid/compare/v0.14.1...HEAD
 [0.14.1]: https://github.com/sstallion/go-hid/releases/tag/v0.14.1
