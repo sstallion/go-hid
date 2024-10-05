@@ -30,6 +30,7 @@ package hid
 import "C"
 
 import (
+	"time"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
@@ -58,4 +59,12 @@ func ReconstructDescriptorData(data interface{}, p []byte) (int, error) {
 		return int(res), wrapErr(Error())
 	}
 	return int(res), nil
+}
+
+// Sets the timeout for hid_write operation
+// The default timeout is 1 second for winapi backend.
+func (d *Device) SetWriteTimeout(timeout time.Duration) {
+	milliseconds := C.ulong(timeout / time.Millisecond)
+
+	C.hid_winapi_set_write_timeout(d.handle, milliseconds)
 }
