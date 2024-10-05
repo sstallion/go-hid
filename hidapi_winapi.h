@@ -46,7 +46,7 @@ extern "C" {
 
 			@ingroup API
 			@param dev A device handle returned from hid_open().
-			@param guid The device's container ID on return.
+			@param container_id The device's container ID on return.
 
 			@returns
 				This function returns 0 on success and -1 on error.
@@ -66,6 +66,26 @@ extern "C" {
 		 * @return Returns size of reconstructed report descriptor if successful, -1 for error.
 		 */
 		int HID_API_EXPORT_CALL hid_winapi_descriptor_reconstruct_pp_data(void *hidp_preparsed_data, unsigned char *buf, size_t buf_size);
+
+		/**
+		 * @brief Sets the timeout for hid_write operation.
+		 *
+		 * Since version 0.15.0, @ref HID_API_VERSION >= HID_API_MAKE_VERSION(0, 15, 0)
+		 *
+		 * The default timeout is 1sec for winapi backend.
+		 *
+		 * In case if 1sec is not enough, on in case of multi-platform development,
+		 * the recommended value is 5sec, e.g. to match (unconfigurable) 5sec timeout
+		 * set for hidraw (linux kernel) implementation.
+		 *
+		 * When the timeout is set to 0, hid_write function becomes non-blocking and would exit immediately.
+		 * When the timeout is set to INFINITE ((DWORD)-1), the function will not exit,
+		 * until the write operation is performed or an error occured.
+		 * See dwMilliseconds parameter documentation of WaitForSingleObject function.
+		 *
+		 * @param timeout New timeout value in milliseconds.
+		 */
+		void HID_API_EXPORT_CALL hid_winapi_set_write_timeout(hid_device *dev, unsigned long timeout);
 
 #ifdef __cplusplus
 }

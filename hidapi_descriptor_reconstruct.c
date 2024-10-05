@@ -1,3 +1,4 @@
+
 /*******************************************************
  HIDAPI - Multi-Platform library for
  communication with HID devices.
@@ -24,7 +25,7 @@
 
 /**
  * @brief References to report descriptor buffer.
- * 
+ *
  */
 struct rd_buffer {
 	unsigned char* buf; /* Pointer to the array which stores the reconstructed descriptor */
@@ -204,7 +205,7 @@ int hid_winapi_descriptor_reconstruct_pp_data(void *preparsed_data, unsigned cha
 	// Create lookup tables for the bit range of each report per collection (position of first bit and last bit in each collection)
 	// coll_bit_range[COLLECTION_INDEX][REPORT_ID][INPUT/OUTPUT/FEATURE]
 	// ****************************************************************************************************************************
-	
+
 	// Allocate memory and initialize lookup table
 	rd_bit_range ****coll_bit_range;
 	coll_bit_range = malloc(pp_data->NumberLinkCollectionNodes * sizeof(*coll_bit_range));
@@ -346,7 +347,7 @@ int hid_winapi_descriptor_reconstruct_pp_data(void *preparsed_data, unsigned cha
 					for (HIDP_REPORT_TYPE rt_idx = 0; rt_idx < NUM_OF_HIDP_REPORT_TYPES; rt_idx++) {
 						for (int reportid_idx = 0; reportid_idx < 256; reportid_idx++) {
 							for (int child_idx = 1; child_idx < coll_number_of_direct_childs[collection_node_idx]; child_idx++) {
-								// since the coll_bit_range array is not sorted, we need to reference the collection index in 
+								// since the coll_bit_range array is not sorted, we need to reference the collection index in
 								// our sorted coll_child_order array, and look up the corresponding bit ranges for comparing values to sort
 								int prev_coll_idx = coll_child_order[collection_node_idx][child_idx - 1];
 								int cur_coll_idx = coll_child_order[collection_node_idx][child_idx];
@@ -434,7 +435,7 @@ int hid_winapi_descriptor_reconstruct_pp_data(void *preparsed_data, unsigned cha
 				}
 				coll_last_written_child[collection_node_idx] = coll_child_order[collection_node_idx][nextChild];
 				collection_node_idx = coll_child_order[collection_node_idx][nextChild];
-												
+
 				if (link_collection_nodes[collection_node_idx].IsAlias && (firstDelimiterNode == NULL)) {
 					// Alliased Collection (First node in link_collection_nodes -> Last entry in report descriptor output)
 					firstDelimiterNode = main_item_list;
@@ -594,7 +595,7 @@ int hid_winapi_descriptor_reconstruct_pp_data(void *preparsed_data, unsigned cha
 		int	caps_idx = main_item_list->CapsIndex;
 		if (main_item_list->MainItemType == rd_collection) {
 			if (last_usage_page != link_collection_nodes[main_item_list->CollectionIndex].LinkUsagePage) {
-				// Write "Usage Page" at the begin of a collection - except it refers the same table as wrote last 
+				// Write "Usage Page" at the begin of a collection - except it refers the same table as wrote last
 				rd_write_short_item(rd_global_usage_page, link_collection_nodes[main_item_list->CollectionIndex].LinkUsagePage, &rpt_desc);
 				last_usage_page = link_collection_nodes[main_item_list->CollectionIndex].LinkUsagePage;
 			}
@@ -606,7 +607,7 @@ int hid_winapi_descriptor_reconstruct_pp_data(void *preparsed_data, unsigned cha
 				// Write "Usage" of collection
 				rd_write_short_item(rd_local_usage, link_collection_nodes[main_item_list->CollectionIndex].LinkUsage, &rpt_desc);
 			}
-			// Write begin of "Collection" 
+			// Write begin of "Collection"
 			rd_write_short_item(rd_main_collection, link_collection_nodes[main_item_list->CollectionIndex].CollectionType, &rpt_desc);
 		}
 		else if (main_item_list->MainItemType == rd_collection_end) {
@@ -656,7 +657,7 @@ int hid_winapi_descriptor_reconstruct_pp_data(void *preparsed_data, unsigned cha
 		else if (main_item_list->TypeOfNode == rd_item_node_padding) {
 			// Padding
 			// The preparsed data doesn't contain any information about padding. Therefore all undefined gaps
-			// in the reports are filled with the same style of constant padding. 
+			// in the reports are filled with the same style of constant padding.
 
 			// Write "Report Size" with number of padding bits
 			rd_write_short_item(rd_global_report_size, (main_item_list->LastBit - main_item_list->FirstBit + 1), &rpt_desc);
@@ -751,8 +752,8 @@ int hid_winapi_descriptor_reconstruct_pp_data(void *preparsed_data, unsigned cha
 				(pp_data->caps[main_item_list->next->CapsIndex].BitField == pp_data->caps[caps_idx].BitField)
 				) {
 				if (main_item_list->next->FirstBit != main_item_list->FirstBit) {
-					// In case of IsMultipleItemsForArray for multiple dedicated usages for a multi-button array, the report count should be incremented 
-							
+					// In case of IsMultipleItemsForArray for multiple dedicated usages for a multi-button array, the report count should be incremented
+
 					// Skip global items until any of them changes, than use ReportCount item to write the count of identical report fields
 					report_count++;
 				}

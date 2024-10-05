@@ -287,6 +287,22 @@ func (d *Device) SendFeatureReport(p []byte) (int, error) {
 	return int(res), nil
 }
 
+// SendOutputReport sends an output report with len(p) bytes to the Device.
+// It returns the number of bytes written and an error, if any.
+//
+// The first byte must contain the report ID to send. Data will be sent over
+// the control endpoint as a Set_Report transfer.
+func (d *Device) SendOutputReport(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
+
+	res := C.hid_send_output_report(d.handle, data, length)
+	if res == -1 {
+		return int(res), wrapErr(d.Error())
+	}
+	return int(res), nil
+}
+
 // GetFeatureReport receives a feature report with len(p) bytes from the
 // Device. It returns the number of bytes read and an error, if any.
 //
