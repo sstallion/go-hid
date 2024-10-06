@@ -20,6 +20,8 @@
         https://github.com/libusb/hidapi .
 ********************************************************/
 
+//go:build !libusb
+
 /* C */
 #include <stdio.h>
 #include <string.h>
