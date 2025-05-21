@@ -29,7 +29,7 @@
 package hid
 
 /*
-#cgo darwin LDFLAGS: -framework IOKit -framework CoreFoundation -framework AppKit
+#cgo darwin LDFLAGS: -framework IOKit -framework CoreFoundation
 #cgo freebsd CFLAGS: -I/usr/local/include
 #cgo freebsd LDFLAGS: -L/usr/local/lib -lusb -liconv -pthread
 #cgo linux LDFLAGS: -ludev -lrt
@@ -228,7 +228,7 @@ func (d *Device) ReadWithTimeout(p []byte, timeout time.Duration) (int, error) {
 	res := C.hid_read_timeout(d.handle, data, length, milliseconds)
 	switch res {
 	case -1:
-		return int(res), wrapErr(d.Error())
+		return int(res), wrapErr(d.ReadError())
 	case 0:
 		return int(res), ErrTimeout
 	}
@@ -248,7 +248,7 @@ func (d *Device) Read(p []byte) (int, error) {
 	res := C.hid_read(d.handle, data, length)
 	switch res {
 	case -1:
-		return int(res), wrapErr(d.Error())
+		return int(res), wrapErr(d.ReadError())
 	case 0:
 		return int(res), ErrTimeout
 	}
@@ -309,6 +309,19 @@ func (d *Device) GetInputReport(p []byte) (int, error) {
 	length := C.size_t(len(p))
 
 	res := C.hid_get_input_report(d.handle, data, length)
+	if res == -1 {
+		return int(res), wrapErr(d.Error())
+	}
+	return int(res), nil
+}
+
+// SendOutputReport sends an output report with len(p) bytes to the Device. It
+// returns the number of bytes written and an error, if any.
+func (d *Device) SendOutputReport(p []byte) (int, error) {
+	data := (*C.uchar)(&p[0])
+	length := C.size_t(len(p))
+
+	res := C.hid_send_output_report(d.handle, data, length)
 	if res == -1 {
 		return int(res), wrapErr(d.Error())
 	}
@@ -395,6 +408,16 @@ func (d *Device) GetReportDescriptor(p []byte) (int, error) {
 // occurred, nil is returned.
 func (d *Device) Error() error {
 	wcs := C.hid_error(d.handle)
+	if wcs == nil {
+		return nil // no error
+	}
+	return errors.New(wcstogo(wcs))
+}
+
+// ReadError returns the last error that occurred when reading from the Device.
+// If no error occurred, nil is returned.
+func (d *Device) ReadError() error {
+	wcs := C.hid_read_error(d.handle)
 	if wcs == nil {
 		return nil // no error
 	}
