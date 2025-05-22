@@ -7,14 +7,14 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ffurrer2/extract-release-notes@v1
+      - uses: actions/checkout@v4
+      - uses: ffurrer2/extract-release-notes@v2
         id: extract-release-notes
       - name: Generate release name
         run: |
           REF_NAME="${{ github.ref_name }}"
           echo "RELEASE_NAME=${REF_NAME#v}" >>$GITHUB_ENV
-      - uses: softprops/action-gh-release@v1
+      - uses: softprops/action-gh-release@v2
         with:
           body: ${{ steps.extract-release-notes.outputs.release_notes }}
           name: ${{ env.RELEASE_NAME }}

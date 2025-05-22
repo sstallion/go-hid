@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: ['1.18', '1.19']
+        go-version: ['1.20', '1.21']
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
@@ -19,11 +19,11 @@ jobs:
               sudo apt-get install libudev-dev libusb-1.0-0-dev
             tags: libusb
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         if: ${{ matrix.prepare }}
         run: ${{ matrix.prepare }}
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
       - name: Run tests
@@ -33,22 +33,22 @@ jobs:
         run: go test -tags ${{ matrix.tags }} ./...
 
   test-freebsd:
-    runs-on: macos-12
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        go-version: ['1.18', '1.19']
+        go-version: ['1.20', '1.21']
         include:
-          - go-version: '1.18'
-            go-pkg: go118
-          - go-version: '1.19'
-            go-pkg: go119
+          - go-version: '1.20'
+            go-pkg: go120
+          - go-version: '1.21'
+            go-pkg: go121
     steps:
-      - uses: actions/checkout@v3
-      - uses: vmactions/freebsd-vm@v0
+      - uses: actions/checkout@v4
+      - uses: vmactions/freebsd-vm@v1
         with:
           copyback: false
-          release: '13.1'
+          release: '13.5'
           prepare: |
             pkg install -y ${{ matrix.go-pkg }} libiconv
           run: |
