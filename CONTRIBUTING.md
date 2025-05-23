@@ -5,49 +5,57 @@ don't have time to contribute!
 
 ## Making Changes
 
-> **Note**: This guide assumes you have a working Go 1.17 (or later)
-> installation.
+> [!NOTE]
+> This guide assumes you have a functioning Go 1.17 (or later) installation.
 
 To get started, [fork][2] this repository on GitHub and clone a working copy for
 development:
 
-    $ git clone git@github.com:YOUR-USERNAME/go-hid.git
+```
+$ git clone git@github.com:YOUR-USERNAME/go-hid.git
+```
 
-Once you are finished, be sure to test changes locally by issuing:
+Once you have finished making changes, run tests by issuing:
 
-    $ go test ./...
+```
+$ go test ./...
+```
 
 Finally, commit your changes and create a [pull request][3] against the default
-branch for review.
+branch for review. At a minimum, there should be no test regressions and
+additional tests should be added for new functionality.
 
 ## Making Releases
 
-Making releases is automated by [GitHub Actions][4]. Releases should only be
-created from the default branch; as such, tests should be passing at all times.
+Making releases is automated by [GitHub Actions][4]. Releases are created from
+the default branch; as such, tests should be passing at all times.
 
-To make a release, follow these steps:
+To make a release, perform the following:
 
-1. Create a section in [CHANGELOG.md][5] for the version, and move items from
-   `Unreleased` to this section. Links should also be updated to point to the
+1. Create a new section in [CHANGELOG.md][5] for the release, and move items
+   from Unreleased to this section. Links should also be updated to point to the
    correct tags for comparison.
 
 2. Commit outstanding changes by issuing:
 
-       $ git commit -a -m 'Release v<version>'
+   ```
+   $ git commit -a -m "Release v<version>"
+   ```
 
-3. Push changes to the remote repository and verify the results of the [CI][6]
-   workflow:
+3. Push changes and verify the results of the [CI][6] workflow.
 
-       $ git push origin <default-branch>
+4. Create a release tag from the default branch by issuing:
 
-4. Create a release tag by issuing:
-
-       $ git tag -a -m 'Release v<version>' v<version>
+   ```
+   $ git tag -a -m "Release v<version>" v<version>
+   ```
 
 5. Push the release tag to the remote repository and verify the results of the
    [Release][7] workflow:
 
-       $ git push origin --tags
+   ```
+   $ git push origin --tags
+   ```
 
 ## License
 

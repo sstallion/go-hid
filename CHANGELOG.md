@@ -9,83 +9,89 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Imported 0.15.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
+- Imported 0.15.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi)
+
+### Added
+
+- Added support for `SendOutputReport` (`hid_send_output_report`)
+- Added support for `ReadError` (`hid_read_error`)
+- Added support for `SetWriteTimeout` (`hid_winapi_set_write_timeout`) for `windows`
 
 ## [0.14.1] - 2023-07-15
 
 ### Fixed
 
-- Fixed MBCS string support for `windows` ([MURAOKA Taro](https://github.com/koron)).
+- Fixed MBCS string support for `windows` ([MURAOKA Taro](https://github.com/koron))
 
 ## [0.14.0] - 2023-06-05
 
 ### Added
 
-- Added missing optional APIs for `windows`.
+- Added missing optional APIs for `windows`
 
 ### Changed
 
-- Imported 0.14.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
+- Imported 0.14.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi)
 
 ## [0.13.3] - 2023-02-27
 
 ### Added
 
-- Added libusb backend support for `linux`.
+- Added libusb backend support for `linux`
 
 ## [0.13.2] - 2023-01-31
 
 ### Changed
 
-- Improved `lshid` device information formatting.
+- Improved `lshid` device information formatting
 
 ### Fixed
 
-- `go.mod` now correctly references `go1.17`.
+- `go.mod` now correctly references `go1.17`
 
 ## [0.13.1] - 2023-01-09
 
 ### Changed
 
-- Updated `lshid` flags; `-verbose` has been renamed to `-V`.
-- Imported 0.13.1 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
+- Updated `lshid` flags; `-verbose` has been renamed to `-V`
+- Imported 0.13.1 sources from [libusb/hidapi](https://github.com/libusb/hidapi)
 
 ## [0.13.0] - 2023-01-06
 
 ### Changed
 
-- Imported 0.13.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
+- Imported 0.13.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi)
 
 ## [0.12.4] - 2022-12-23
 
 ### Fixed
 
-- Guaranteed `hid.Device` satisfies `io.ReadWriteCloser`.
+- Guaranteed `hid.Device` satisfies `io.ReadWriteCloser`
 
 ## [0.12.3] - 2022-12-20
 
 ### Added
 
-- Added `/usr/local/lib` to library search path on FreeBSD.
+- Added `/usr/local/lib` to library search path on FreeBSD
 
 ## [0.12.2] - 2022-12-20
 
 ### Changed
 
-- Renamed `hid.InterfaceAny` to `hid.InterfaceNbrAny` for consistency.
+- Renamed `hid.InterfaceAny` to `hid.InterfaceNbrAny` for consistency
 
 ## [0.12.1] - 2022-12-19
 
 ### Added
 
-- Added missing optional APIs for `darwin` and `freebsd`.
-- Improved error reporting.
+- Added missing optional APIs for `darwin` and `freebsd`
+- Improved error reporting
 
 ## [0.12.0] - 2022-12-18
 
 ### Changed
 
-- Imported 0.12.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi).
+- Imported 0.12.0 sources from [libusb/hidapi](https://github.com/libusb/hidapi)
 
 ## [0.8.0] - 2022-12-18
 

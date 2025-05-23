@@ -18,24 +18,35 @@ See https://github.com/libusb/hidapi for details.
 
 To add package `hid` as a dependency or upgrade to its latest version, issue:
 
-    $ go get github.com/sstallion/go-hid@latest
+```
+$ go get github.com/sstallion/go-hid@latest
+```
 
->**Note**: Prerequisites for building HIDAPI from source must be installed prior
-> to issuing `go get`. See [Prerequisites][6] for details.
+> [!NOTE]
+> Prerequisites for building HIDAPI from source must be installed prior to
+> issuing `go get`. See [Prerequisites][6] for details.
+
+> [!IMPORTANT]
+> This package requires cgo. GCC must be installed and available on the system
+> PATH before compilation. See the [cgo documentation][7] for details.
 
 ### libusb Backend Support
 
 On Linux, the hidraw backend is enabled by default. If the libusb backend is
 desired, the `libusb` build constraint must be specified:
 
-    $ go build -tags libusb ./...
+```
+$ go build -tags libusb ./...
+```
 
 ### lshid
 
 A command named `lshid` is provided, which lists HID devices attached to the
 system. `lshid` may be installed by issuing:
 
-    $ go install github.com/sstallion/go-hid/cmd/lshid@latest
+```
+$ go install github.com/sstallion/go-hid/cmd/lshid@latest
+```
 
 Once installed, issue `lshid -h` to show usage.
 
@@ -44,11 +55,13 @@ Once installed, issue `lshid -h` to show usage.
 Up-to-date documentation can be found on [pkg.go.dev][2] or by issuing the `go
 doc` command after installation:
 
-    $ go doc -all github.com/sstallion/go-hid
+```
+$ go doc -all github.com/sstallion/go-hid
+```
 
 ## Contributing
 
-Pull requests are welcome! See [CONTRIBUTING.md][7] for details.
+Pull requests are welcome! See [CONTRIBUTING.md][8] for details.
 
 ## License
 
@@ -61,4 +74,5 @@ Source code in this repository is licensed under a Simplified BSD License. See
 [4]: https://github.com/sstallion/go-hid/releases/latest
 [5]: https://github.com/sstallion/go-hid/blob/master/LICENSE
 [6]: https://github.com/libusb/hidapi/blob/master/BUILD.md#prerequisites
-[7]: https://github.com/sstallion/go-hid/blob/master/CONTRIBUTING.md
+[7]: https://pkg.go.dev/cmd/cgo
+[8]: https://github.com/sstallion/go-hid/blob/master/CONTRIBUTING.md
