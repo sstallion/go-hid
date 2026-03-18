@@ -26,6 +26,7 @@
 package hid
 
 /*
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <wchar.h>
@@ -37,6 +38,29 @@ static bool
 iswerr(size_t n)
 {
 	return n == (size_t)-1;
+}
+
+// wcstombs_lossy converts a wide string to a multibyte string, skipping any
+// characters that cannot be converted.
+static size_t
+wcstombs_lossy(char *dest, const wchar_t *src, size_t n)
+{
+	size_t total = 0;
+	char buf[MB_LEN_MAX];
+	int len;
+
+	wctomb(NULL, L'\0'); // reset conversion state
+
+	while (*src != L'\0') {
+		len = wctomb(buf, *src);
+		if (len > 0 && total + (size_t)len < n) {
+			for (int i = 0; i < len; i++)
+				dest[total++] = buf[i];
+		}
+		src++;
+	}
+	dest[total] = '\0';
+	return total;
 }
 */
 import "C"
@@ -68,11 +92,12 @@ func wcstogo(wcs *C.wchar_t) string {
 	}
 
 	n := C.wcslen(wcs) + 1
+	bufsz := n * C.size_t(C.MB_CUR_MAX)
 	cs := (*C.char)(calloc(n, C.size_t(C.MB_CUR_MAX)))
 	defer C.free(unsafe.Pointer(cs))
 
-	if n, err := C.wcstombs(cs, wcs, n); C.iswerr(n) {
-		panic(err)
+	if ret := C.wcstombs(cs, wcs, n); C.iswerr(ret) {
+		C.wcstombs_lossy(cs, wcs, bufsz)
 	}
 	return C.GoString(cs)
 }
