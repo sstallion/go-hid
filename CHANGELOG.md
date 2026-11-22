@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Retry reads and writes interrupted by a signal (`EINTR`) instead of returning
+  a spurious error.
+
 ## [0.15.0] - 2025-05-23
 
 ### Changed

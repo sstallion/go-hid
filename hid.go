@@ -36,9 +36,39 @@ package hid
 #cgo linux,libusb pkg-config: libusb-1.0
 #cgo linux,libusb LDFLAGS: -lpthread
 
+#include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "hidapi.h"
+
+// hid_write_errno, hid_read_errno and hid_read_timeout_errno wrap the HIDAPI
+// calls so that errno is sampled in the same C frame. cgo does not guarantee
+// that the goroutine resumes on the same thread, so errno cannot be read
+// reliably from Go after the call returns. errno is cleared first so backends
+// that do not set it never report a stale value.
+static int hid_write_errno(hid_device *dev, const unsigned char *data, size_t length, int *err) {
+	int res;
+	errno = 0;
+	res = hid_write(dev, data, length);
+	*err = errno;
+	return res;
+}
+
+static int hid_read_errno(hid_device *dev, unsigned char *data, size_t length, int *err) {
+	int res;
+	errno = 0;
+	res = hid_read(dev, data, length);
+	*err = errno;
+	return res;
+}
+
+static int hid_read_timeout_errno(hid_device *dev, unsigned char *data, size_t length, int milliseconds, int *err) {
+	int res;
+	errno = 0;
+	res = hid_read_timeout(dev, data, length, milliseconds);
+	*err = errno;
+	return res;
+}
 */
 import "C"
 
@@ -68,6 +98,13 @@ func wrapErr(err error) error {
 		return errors.New("unspecified error")
 	}
 	return err
+}
+
+// isEINTR reports whether errno is EINTR, which happens when a signal (e.g.
+// SIGCHLD from a spawned subprocess) interrupts a blocking hidraw read/write.
+// These should be retried.
+func isEINTR(errno C.int) bool {
+	return errno == C.EINTR
 }
 
 // Init initializes the hid package. Calling this function is not strictly
@@ -206,11 +243,17 @@ func (d *Device) Write(p []byte) (int, error) {
 	data := (*C.uchar)(&p[0])
 	length := C.size_t(len(p))
 
-	res := C.hid_write(d.handle, data, length)
-	if res == -1 {
-		return int(res), wrapErr(d.Error())
+	for {
+		var errno C.int
+		res := C.hid_write_errno(d.handle, data, length, &errno)
+		if res == -1 {
+			if isEINTR(errno) {
+				continue
+			}
+			return int(res), wrapErr(d.Error())
+		}
+		return int(res), nil
 	}
-	return int(res), nil
 }
 
 // ReadWithTimeout receives an input report with len(p) bytes from the Device
@@ -225,14 +268,20 @@ func (d *Device) ReadWithTimeout(p []byte, timeout time.Duration) (int, error) {
 	length := C.size_t(len(p))
 	milliseconds := C.int(timeout / time.Millisecond)
 
-	res := C.hid_read_timeout(d.handle, data, length, milliseconds)
-	switch res {
-	case -1:
-		return int(res), wrapErr(d.ReadError())
-	case 0:
-		return int(res), ErrTimeout
+	for {
+		var errno C.int
+		res := C.hid_read_timeout_errno(d.handle, data, length, milliseconds, &errno)
+		switch res {
+		case -1:
+			if isEINTR(errno) {
+				continue
+			}
+			return int(res), wrapErr(d.ReadError())
+		case 0:
+			return int(res), ErrTimeout
+		}
+		return int(res), nil
 	}
-	return int(res), nil
 }
 
 // Read receives an input report with len(p) bytes from the Device. It returns
@@ -245,14 +294,20 @@ func (d *Device) Read(p []byte) (int, error) {
 	data := (*C.uchar)(&p[0])
 	length := C.size_t(len(p))
 
-	res := C.hid_read(d.handle, data, length)
-	switch res {
-	case -1:
-		return int(res), wrapErr(d.ReadError())
-	case 0:
-		return int(res), ErrTimeout
+	for {
+		var errno C.int
+		res := C.hid_read_errno(d.handle, data, length, &errno)
+		switch res {
+		case -1:
+			if isEINTR(errno) {
+				continue
+			}
+			return int(res), wrapErr(d.ReadError())
+		case 0:
+			return int(res), ErrTimeout
+		}
+		return int(res), nil
 	}
-	return int(res), nil
 }
 
 // SetNonblock changes the default behavior for Read. If nonblocking is true,
